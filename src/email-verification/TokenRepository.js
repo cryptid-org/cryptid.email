@@ -18,7 +18,7 @@ const VERIFICATION_TOKEN_OPTIONS = {
 };
 const VERIFICATION_TOKEN_EXPIRATION = 60 * 10; // 10 minutes
 
-const makeCodeRepository = function({ config, randomstring, redis }) {
+const makeTokenRepository = function makeTokenRepository({ config, randomstring, redis }) {
     const client = redis.createClient(config.get('redis.url'));
 
     const generateFormToken = () => randomstring(FORM_TOKEN_OPTIONS);
@@ -65,6 +65,6 @@ const makeCodeRepository = function({ config, randomstring, redis }) {
 
 
 module.exports = {
-    makeCodeRepository,
-    CodeRepository: makeCodeRepository({ config, randomstring, redis })
+    makeTokenRepository,
+    TokenRepository: makeTokenRepository({ config, randomstring, redis })
 };

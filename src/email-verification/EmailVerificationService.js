@@ -1,13 +1,13 @@
-const { CodeRepository } = require('./CodeRepository');
+const { TokenRepository } = require('./TokenRepository');
 const { EmailSender } = require('./EmailSender');
 
-const makeEmailVerificationService = function makeEmailVerificationService({ CodeRepository, EmailSender }) {
+const makeEmailVerificationService = function makeEmailVerificationService({ TokenRepository, EmailSender }) {
     return {
         async getFormToken() {
-            return CodeRepository.requestFormToken();
+            return TokenRepository.requestFormToken();
         },
         async initiateEmailVerification(email, formToken) {
-            const verificationToken = await CodeRepository.requestVerificationToken(formToken);
+            const verificationToken = await TokenRepository.requestVerificationToken(formToken);
 
             if (!verificationToken) {
                 return false;
@@ -18,12 +18,12 @@ const makeEmailVerificationService = function makeEmailVerificationService({ Cod
             return true;
         },
         async checkVerificationToken(formToken, verificationToken) {
-            return CodeRepository.checkVerificationToken(formToken, verificationToken);
+            return TokenRepository.checkVerificationToken(formToken, verificationToken);
         }
     }
 };
 
 module.exports = {
     makeEmailVerificationService,
-    EmailVerificationService: makeEmailVerificationService({ CodeRepository, EmailSender })
+    EmailVerificationService: makeEmailVerificationService({ TokenRepository, EmailSender })
 };
