@@ -19,6 +19,14 @@ const config = convict({
         format: String,
         default: 'localhost',
         env: 'HOST'
+    },
+    redis: {
+        url: {
+            doc: 'The url of the email verification Redis instance.',
+            format: String,
+            default: 'redis://localhost:6379',
+            env: 'REDIS_URL'
+        }
     }
 });
 
