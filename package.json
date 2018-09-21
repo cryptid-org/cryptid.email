@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cryptid-org/email-server#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "boom": "^7.2.0",
     "convict": "^4.3.2",
     "hapi": "^17.5.4",

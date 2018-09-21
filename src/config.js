@@ -27,6 +27,20 @@ const config = convict({
             default: 'redis://localhost:6379',
             env: 'REDIS_URL'
         }
+    },
+    sendGrid: {
+        apiKey: {
+            doc: 'The SendGrid API key.',
+            format: String,
+            default: 'WILL_NOT_WORK',
+            env: 'SENDGRID_API_KEY'
+        },
+        senderAddress: {
+            doc: 'The address that will appear as the sender in emails sent by SendGrid.',
+            format: String,
+            default: 'verify@cryptid.email',
+            env: 'SENDGRID_SENDER_ADDRESS'
+        }
     }
 });
 
