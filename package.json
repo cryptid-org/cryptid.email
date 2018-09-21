@@ -1,0 +1,19 @@
+{
+  "name": "@cryptid/email-server",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryptid-org/email-server.git"
+  },
+  "author": "Attila Bagossy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptid-org/email-server/issues"
+  },
+  "homepage": "https://github.com/cryptid-org/email-server#readme"
+}
