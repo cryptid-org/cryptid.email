@@ -9,6 +9,13 @@ const server = new Hapi.server({
 
 (async function startServer() {
     try {
+        await server.register([{
+            plugin: require('./api'),
+            routes: {
+                prefix: '/api'
+            }
+        }]);
+
         await server.start();
     } catch (err) {
         console.log(err);
