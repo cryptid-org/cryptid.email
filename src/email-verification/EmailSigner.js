@@ -6,11 +6,13 @@ const makeEmailSigner = function makeEmailSigner({ config, jwt }) {
     return {
         sign(email) {
             const options = {
-                algorithm: [config.get('emailVerification.sign.algorithm')],
+                algorithm: config.get('emailVerification.sign.algorithm'),
                 expiresIn: config.get('emailVerification.sign.expiration')
             };
 
-            return jwt.sign({ email }, config.get('emailVerification.sign.secret'), options);
+            const t = jwt.sign({ email }, config.get('emailVerification.sign.secret'), options);
+
+            return t;
         },
         verify(token) {
             const options = {

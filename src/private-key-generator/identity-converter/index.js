@@ -8,6 +8,6 @@ const implementations = {
 
 module.exports = {
     IdentityConverter: (function requireIdentityConverter(impl) {
-        return implementations[impl];      
+        return implementations[impl]();      
     })(config.get('ibe.privateKeyGenerator.identityConverter'))
 };

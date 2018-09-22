@@ -16,9 +16,9 @@ const POST = {
             return Boom.badRequest('Erroneous email token!');
         }
 
-        const { success, privateKey } = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
+        const privateKey = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
         
-        if (!success) {
+        if (!privateKey) {
             return Boom.badRequest('Could not extract private key!');
         }
 

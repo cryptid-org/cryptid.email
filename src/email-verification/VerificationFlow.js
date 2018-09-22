@@ -12,6 +12,8 @@ const makeVerificationFlow = function makeVerificationFlow({ EmailSigner, EmailV
         async checkVerificationToken(formToken, verificationToken) {
             const email = await EmailVerificationService.checkVerificationToken(formToken, verificationToken);
 
+            console.log(email);
+
             if (!email) {
                 return null;
             }

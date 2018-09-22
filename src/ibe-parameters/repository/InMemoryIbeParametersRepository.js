@@ -9,7 +9,9 @@ const makeInMemoryIbeParametersRepository = function makeInMemoryIbeParametersRe
                 return null;
             }
             
-            return currentParameters.publicParameters;
+            return Object.assign({
+                id: currentParameters.id
+            }, currentParameters.publicParameters);
         },
         async getParametersForId(parametersId) {
             return parameterMap.get(parametersId);

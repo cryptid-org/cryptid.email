@@ -17,6 +17,8 @@ const emailAddress = {
             if (!result) {
                 return Boom.badRequest('Invalid form token!');
             }
+
+            return h.continue;
         },
         options: {
             description: 'Initiates the email verification process by sending a verification token.',

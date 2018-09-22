@@ -7,7 +7,7 @@ const makeEmailVerificationService = function makeEmailVerificationService({ Tok
             return TokenRepository.requestFormToken();
         },
         async initiateEmailVerification(email, formToken) {
-            const verificationToken = await TokenRepository.requestVerificationToken(formToken);
+            const verificationToken = await TokenRepository.requestVerificationToken(email, formToken);
 
             if (!verificationToken) {
                 return false;

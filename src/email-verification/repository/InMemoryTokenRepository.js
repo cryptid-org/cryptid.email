@@ -4,8 +4,8 @@ const config = require('../../../config');
 
 
 const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ config, randomstring }) {
-    const generateFormToken = () => randomstring(config.get('emailVerification.formToken'));
-    const generateVerificationToken = () => randomstring(config.get('emailVerification.verificationToken'));
+    const generateFormToken = () => randomstring.generate(config.get('emailVerification.formToken'));
+    const generateVerificationToken = () => randomstring.generate(config.get('emailVerification.verificationToken'));
 
     const storage = new Map();
 
@@ -25,9 +25,9 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
             return token;
         },
         async requestVerificationToken(email, formToken) {
-            const value = storage.get(formToken)
+            const value = storage.get(formToken);
 
-            if (!value || value.verificationToken != config.get('emailVerification.formToken.placeholder')) {
+            if (!value || (value.verificationToken != config.get('emailVerification.formToken.placeholder'))) {
                 return null;
             }
 
@@ -39,7 +39,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
                 storage.delete(formToken);
             }, config.get('emailVerification.verificationToken.expiration') * 1000);
 
-            storage.set(token, {
+            storage.set(formToken, {
                 verificationToken,
                 email,
                 timeoutHandle
@@ -50,7 +50,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
         async checkVerificationToken(formToken, verificationToken) {
             const saved = storage.get(formToken);
 
-            if (!saved || saved.verificationToken != verificationToken) {
+            if (!saved || (saved.verificationToken != verificationToken)) {
                 return null;
             }
 

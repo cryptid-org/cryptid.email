@@ -8,15 +8,19 @@ const makeEmailSender = function makeEmailSender({ config, sendGridMail }) {
 
     return {
         sendCode(recipient, verificationToken) {
-            const message = {
-                to: recipient,
-                from: config.get('emailVerification.sendGrid.senderAddress'),
-                subject: 'Your CryptID Verification Code',
-                text: `Please enter the following code to verify your email address: ${verificationToken}`,
-                html: `Please enter the following code to verify your email address: <pre>${verificationToken}</pre>`
-            };
-
-            sendGridMail.send(message);
+            if (config.get('env') == 'development') {
+                console.log(`Sending token ${verificationToken} to ${recipient}.`);
+            } else {
+                const message = {
+                    to: recipient,
+                    from: config.get('emailVerification.sendGrid.senderAddress'),
+                    subject: 'Your CryptID Verification Code',
+                    text: `Please enter the following code to verify your email address: ${verificationToken}`,
+                    html: `Please enter the following code to verify your email address: <pre>${verificationToken}</pre>`
+                };
+    
+                sendGridMail.send(message);
+            }
         }
     }
 };

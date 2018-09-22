@@ -36,3 +36,8 @@ const server = new Hapi.server(config.get('server'));
 
     console.log('Server running at:', server.info.uri);
 })();
+
+
+process.on('unhandledRejection', err => {
+    console.log(err);
+});
