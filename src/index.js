@@ -4,11 +4,19 @@ const config = require('../config');
 
 const Hapi = require('hapi');
 
-const server = new Hapi.server(config.get('server'));
+const server = new Hapi.server({
+    port: config.get('server.port'),
+    host: config.get('server.host'),
+    routes: {
+        files: {
+            relativeTo: path.join(__dirname, '..', 'public')
+        }
+    }
+});
 
 (async function startServer() {
     try {
-        await server.register(require('vision'));
+        await server.register([require('vision'), require('inert')]);
 
         server.views({
             engines: {
@@ -16,7 +24,7 @@ const server = new Hapi.server(config.get('server'));
             },
             relativeTo: path.join(__dirname, '..'),
             path: 'templates'
-        })
+        });
 
         await server.register([{
             plugin: require('./api'),
