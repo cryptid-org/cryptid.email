@@ -23,6 +23,7 @@
     },
     ibe: {
         // one hour (in ms)
-        parameterChangeInterval: 3600000 
+        parameterChangeInterval: 3600000,
+        securityLevel: '2'
     }
 }

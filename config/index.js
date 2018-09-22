@@ -89,6 +89,11 @@ const config = convict({
             doc: 'IBE parameters are regenerated (ie. setup is called) periodically using this interval.',
             format: Number,
             default: 1000 * 60 * 60 * 24 * 30, // one month
+        },
+        securityLevel: {
+            doc: 'The security level of the IBE system. Determines the strength of the system.',
+            format: ['0', '1', '2', '3', '4'],
+            default: '2'
         }
     }
 });
