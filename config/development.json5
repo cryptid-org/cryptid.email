@@ -1,0 +1,28 @@
+{
+    server: {
+        port: 8080,
+        host: 'localhost'
+    },
+    emailVerification: {
+        sendGrid: {
+            senderAddress: 'verify@cryptid.email'
+        },
+        formToken: {
+            length: 128,
+            charset: 'alphanumeric',
+            placeholder: 'Hello darkness, my old friend',
+            // one hour (in sec)
+            placeholderExpiration: 3600
+        },
+        verificationToken: {
+            length: 8,
+            charset: 'alphanumeric',
+            // ten minutes (in sec)
+            expiration: 600
+        }
+    },
+    ibe: {
+        // one hour (in ms)
+        parameterChangeInterval: 3600000 
+    }
+}

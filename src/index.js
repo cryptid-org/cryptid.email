@@ -1,13 +1,10 @@
 const path = require('path');
 
-const config = require('./config');
+const config = require('../config');
 
 const Hapi = require('hapi');
 
-const server = new Hapi.server({
-    host: config.get('host'),
-    port: config.get('port')
-});
+const server = new Hapi.server(config.get('server'));
 
 (async function startServer() {
     try {
@@ -39,4 +36,3 @@ const server = new Hapi.server({
 
     console.log('Server running at:', server.info.uri);
 })();
-
