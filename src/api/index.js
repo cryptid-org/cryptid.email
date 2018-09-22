@@ -1,19 +1,6 @@
 const publicParameters = require('./public-parameters');
 
-const email = {
-    verify: {
-        POST: {
-            method: 'POST',
-            path: '/email/verify',
-            handler(request, h) {
-                return 'Verify email.';
-            },
-            options: {
-                description: 'Initiates the email verification process.'
-            }
-        }
-    }
-};
+const email = require('./email');
 
 const privateKey = {
     POST: {
