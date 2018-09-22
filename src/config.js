@@ -41,6 +41,14 @@ const config = convict({
             default: 'verify@cryptid.email',
             env: 'SENDGRID_SENDER_ADDRESS'
         }
+    },
+    ide: {
+        parameterChangeInterval: {
+            doc: 'IBE parameters are regenerated (ie. setup is called) periodically using this interval.',
+            format: Number,
+            default: 1000 * 60 * 60 * 24 * 30, // One month
+            env: 'IBE_PARAMETER_CHANGE_INTERVAL'
+        }
     }
 });
 
