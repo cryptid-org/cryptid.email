@@ -37,7 +37,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
 
             const timeoutHandle = setTimeout(function removeVerificationToken() {
                 storage.delete(formToken);
-            }, config.get('emailVerification.verificationToken.expiration')) * 1000);
+            }, config.get('emailVerification.verificationToken.expiration') * 1000);
 
             storage.set(token, {
                 verificationToken,
