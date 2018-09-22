@@ -26,7 +26,7 @@ const makeRedisTokenRepository = function makeRedisTokenRepository({ config, ran
 
             return result == OK ? token : null;
         },
-        async requestVerificationToken(formToken) {
+        async requestVerificationToken(email, formToken) {
             const placeholderValue = await getAsync(formToken);
 
             if (placeholderValue != config.get('emailVerification.formToken.placeholder')) {
@@ -35,20 +35,25 @@ const makeRedisTokenRepository = function makeRedisTokenRepository({ config, ran
 
             const verificationToken = generateVerificationToken();
 
-            const result = await setAsync(formToken, verificationToken, 'EX', config.get('emailVerification.verificationToken.expiration'));
+            const value = {
+                verificationToken,
+                email
+            };
+
+            const result = await setAsync(formToken, JSON.stringify(value), 'EX', config.get('emailVerification.verificationToken.expiration'));
 
             return result == OK ? verificationToken : null;
         },
         async checkVerificationToken(formToken, verificationToken) {
-            const savedToken = await getAsync(formToken);
+            const value = await getAsync(formToken);
 
-            if (savedToken != verificationToken) {
-                return false;
+            if (value.verificationToken != verificationToken) {
+                return null;
             }
 
             await delAsync(formToken);
 
-            return true;
+            return value.email;
         }
     };
 };

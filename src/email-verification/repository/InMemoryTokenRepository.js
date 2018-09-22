@@ -24,7 +24,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
 
             return token;
         },
-        async requestVerificationToken(formToken) {
+        async requestVerificationToken(email, formToken) {
             const value = storage.get(formToken)
 
             if (!value || value.verificationToken != config.get('emailVerification.formToken.placeholder')) {
@@ -41,6 +41,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
 
             storage.set(token, {
                 verificationToken,
+                email,
                 timeoutHandle
             });
 
@@ -50,14 +51,14 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
             const saved = storage.get(formToken);
 
             if (!saved || saved.verificationToken != verificationToken) {
-                return false;
+                return null;
             }
 
             clearTimeout(saved.timeoutHandle);
 
             storage.delete(formToken);
 
-            return true;
+            return saved.email;
         }
     };
 };
