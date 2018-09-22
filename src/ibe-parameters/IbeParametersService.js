@@ -18,9 +18,8 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
                     .then(result => {
                         return Object.assign({
                             id: uuid(),
-                            masterSecret: result.masterSecret,
                             createdAt: Date.now()
-                        }, result.publicParameters);
+                        }, result);
                     })
                     .then(parameters => IbeParametersRepository.setCurrentParameters(parameters))
                     .then(() => {
@@ -39,7 +38,7 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
             if (pp != null) {
                 const now = Date.now();
                 const timeSince = now - pp.createdAt;
-                const timeUntilExpiry = (createdAt + config.get('ibe.parameterChangeInterval')) - now;
+                const timeUntilExpiry = (pp.createdAt + config.get('ibe.parameterChangeInterval')) - now;
 
                 if (timeSince > config.get('ibe.parameterChangeInterval')) {
                     return rotateParametersIn(INSTANTLY);

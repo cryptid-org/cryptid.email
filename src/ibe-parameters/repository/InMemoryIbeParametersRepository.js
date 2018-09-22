@@ -5,11 +5,7 @@ const makeInMemoryIbeParametersRepository = function makeInMemoryIbeParametersRe
 
     return {
         async getCurrentPublicParameters() {
-            const publicParameters = Object.assign({}, currentParameters);
-
-            delete publicParameters.masterSecret;
-
-            return publicParameters;
+            return currentParameters.publicParameters;
         },
         async getParametersForId(parametersId) {
             return parameterMap.get(parametersId);
