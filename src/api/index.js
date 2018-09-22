@@ -1,26 +1,16 @@
 const publicParameters = require('./public-parameters');
 
-const email = require('./email');
+const verification = require('./verification');
 
-const privateKey = {
-    POST: {
-        method: 'POST',
-        path: '/private-key',
-        handler(request, h) {
-
-        },
-        options: {
-            description: 'Returns the private key corresponding to the specified public key.'
-        }
-    }
-};
+const privateKey = require('./private-key');
 
 const plugin = {
     name: 'api',
     register(server, options) {
         server.route([
             publicParameters.GET,
-            email.verify.POST,
+            verification.emailAddress.POST,
+            verification.emailToken.POST,
             privateKey.POST
         ]);
     }
