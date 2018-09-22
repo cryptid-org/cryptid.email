@@ -1,7 +1,11 @@
 const config = require('../../../config');
 
 module.exports = {
-    IbeParametersRepository: (function requireIbeParametersRepository(env) {
-        return require('./InMemoryIbeParametersRepository').InMemoryIbeParametersRepository;
+    TokenRepository: (function requireTokenRepository(env) {
+        if (env == 'staging' || env == 'production') {
+            return require('./RedisTokenRepository').RedisTokenRepository;
+        }
+
+        return require('./InMemoryTokenRepository').InMemoryTokenRepository;
     })(config.get('env'))
 };

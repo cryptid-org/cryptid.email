@@ -1,15 +1,4 @@
-const publicParameters = {
-    GET: {
-        method: 'GET',
-        path: '/public-parameters',
-        handler(request, h) {
-            return 'public parameters';
-        },
-        options: {
-            description: 'Returns the actual public parameters.'
-        }
-    }
-};
+const publicParameters = require('./public-parameters');
 
 const email = {
     verify: {
