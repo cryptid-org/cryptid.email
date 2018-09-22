@@ -3,26 +3,15 @@ const { promisify }  = require('util');
 const randomstring = require('randomstring');
 const redis = require('redis');
 
-const config = require('../config');
+const config = require('../../../config');
 
-const FORM_TOKEN_OPTIONS = {
-    length: 128,
-    charset: 'alphanumeric'
-};
-const FORM_TOKEN_PLACEHOLDER = 'Hello darkness, my old friend';
-const FORM_TOKEN_PLACEHOLDER_EXPIRATION = 60 * 60 * 24; // 1 day
 const OK = 'OK';
-const VERIFICATION_TOKEN_OPTIONS = {
-    length: 8,
-    charset: 'alphanumeric'
-};
-const VERIFICATION_TOKEN_EXPIRATION = 60 * 10; // 10 minutes
 
-const makeTokenRepository = function makeTokenRepository({ config, randomstring, redis }) {
-    const client = redis.createClient(config.get('redis.url'));
+const makeRedisTokenRepository = function makeRedisTokenRepository({ config, randomstring, redis }) {
+    const client = redis.createClient(config.get('emailVerification.redis.url'));
 
-    const generateFormToken = () => randomstring(FORM_TOKEN_OPTIONS);
-    const generateVerificationToken = () => randomstring(VERIFICATION_TOKEN_OPTIONS);
+    const generateFormToken = () => randomstring(config.get('emailVerification.formToken'));
+    const generateVerificationToken = () => randomstring(config.get('emailVerification.verificationToken'));
 
     const delAsync = promisify(client.del).bind(client);
     const getAsync = promisify(client.get).bind(client);
@@ -32,20 +21,21 @@ const makeTokenRepository = function makeTokenRepository({ config, randomstring,
         async requestFormToken() {
             const token = generateFormToken();
 
-            const result = await setAsync(token, FORM_TOKEN_PLACEHOLDER, 'EX', FORM_TOKEN_PLACEHOLDER_EXPIRATION);
+            const result = await setAsync(token, config.get('emailVerification.formToken.placeholder'), 
+                                          'EX', config.get('emailVerification.formToken.placeholderExpiration'));
 
             return result == OK ? token : null;
         },
         async requestVerificationToken(formToken) {
             const placeholderValue = await getAsync(formToken);
 
-            if (placeholderValue != FORM_TOKEN_PLACEHOLDER) {
+            if (placeholderValue != config.get('emailVerification.formToken.placeholder')) {
                 return null;
             }
 
             const verificationToken = generateVerificationToken();
 
-            const result = await setAsync(formToken, verificationToken, 'EX', VERIFICATION_TOKEN_EXPIRATION);
+            const result = await setAsync(formToken, verificationToken, 'EX', config.get('emailVerification.verificationToken.expiration'));
 
             return result == OK ? verificationToken : null;
         },
@@ -65,6 +55,6 @@ const makeTokenRepository = function makeTokenRepository({ config, randomstring,
 
 
 module.exports = {
-    makeTokenRepository,
-    TokenRepository: makeTokenRepository({ config, randomstring, redis })
+    makeRedisTokenRepository,
+    RedisTokenRepository: makeRedisTokenRepository({ config, randomstring, redis })
 };

@@ -1,4 +1,4 @@
-const { TokenRepository } = require('./TokenRepository');
+const { TokenRepository } = require('./repository');
 const { EmailSender } = require('./EmailSender');
 
 const makeEmailVerificationService = function makeEmailVerificationService({ TokenRepository, EmailSender }) {
