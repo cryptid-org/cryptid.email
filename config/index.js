@@ -94,6 +94,13 @@ const config = convict({
             doc: 'The security level of the IBE system. Determines the strength of the system.',
             format: ['0', '1', '2', '3', '4'],
             default: '2'
+        },
+        privateKeyGenerator: {
+            identityConverter: {
+                doc: 'The strategy used when converting a JSON to an identity string.',
+                format: String,
+                default: 'StringifyConverter'
+            }
         }
     }
 });
