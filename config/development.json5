@@ -19,6 +19,10 @@
             charset: 'alphanumeric',
             // ten minutes (in sec)
             expiration: 600
+        },
+        sign: {
+            algorithm: 'HS256',
+            expiration: '1h'
         }
     },
     ibe: {

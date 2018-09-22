@@ -23,6 +23,7 @@
     "handlebars": "^4.0.12",
     "hapi": "^17.5.4",
     "joi": "^13.6.0",
+    "jsonwebtoken": "^8.3.0",
     "randomstring": "^1.1.5",
     "redis": "^2.8.0",
     "uuid": "^3.3.2",

@@ -75,6 +75,24 @@ const config = convict({
                 default: 600
             }
         },
+        sign: {
+            algorithm: {
+                doc: 'The algorithm used to sign the email.',
+                format: ['HS256', 'HS384'],
+                default: 'HS256',
+            },
+            expiration: {
+                doc: 'The expiration time of the email token.',
+                format: String,
+                default: '1h'
+            },
+            secret: {
+                doc: 'The secret key used to sign email tokens.',
+                format: String,
+                default: 'CHANGE_ME',
+                env: 'EMAIL_SIGN_SECRET'
+            }
+        },
         redis: {
             url: {
                 doc: 'The url of the email verification Redis instance.',
