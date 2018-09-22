@@ -1,12 +1,14 @@
 const MetaClient = require('../../ext/metaclient.cjs');
 
-const config = require('../config');
+const config = require('../../config');
 
-const makeIbeParametersService = function makeIbeParametersService({ config, MetaClient }) {
+const { IbeParametersRepository } = require('./repository');
+
+const makeIbeParametersService = function makeIbeParametersService({ config, IbeParametersRepository, MetaClient }) {
     
 };
 
 module.exports = {
     makeIbeParametersService,
-    IbeParametersService = makeIbeParametersService({ config, MetaClient })
+    IbeParametersService = makeIbeParametersService({ config, IbeParametersRepository, MetaClient })
 };
