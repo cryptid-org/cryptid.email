@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const config = require('../../config');
 
-const { EmailVerificationService } = require('../email-verification/EmailVerificationService');
+const { VerificationFlow  } = require('../email-verification/VerificationFlow');
 
 const emailAddress = {
     POST: {
@@ -12,14 +12,14 @@ const emailAddress = {
         async handler(request, h) {
             const { email, formToken } = request.payload;
 
-            const result = await EmailVerificationService.initiateEmailVerification(email, formToken);
+            const result = await VerificationFlow.initiateVerificationForAddress(email, formToken);
 
             if (!result) {
                 return Boom.badRequest('Invalid form token!');
             }
         },
         options: {
-            description: 'Initiates the email verification process.',
+            description: 'Initiates the email verification process by sending a verification token.',
             validate: {
                 payload: {
                     email: Joi.string().email().required(),
@@ -35,20 +35,24 @@ const emailToken = {
         method: 'POST',
         path: '/verification/email/token',
         async handler(request, h) {
-            const { email, formToken } = request.payload;
+            const { formToken, verificationToken } = request.payload;
 
-            const result = await EmailVerificationService.initiateEmailVerification(email, formToken);
+            const emailToken = await VerificationFlow.checkVerificationToken(formToken, verificationToken);
 
-            if (!result) {
-                return Boom.badRequest('Invalid form token!');
+            if (!emailToken) {
+                return Boom.badRequest('Invalid form or verification token!');
             }
+
+            return {
+                emailToken
+            };
         },
         options: {
-            description: 'Initiates the email verification process.',
+            description: 'Checks if the token matches the email address.',
             validate: {
                 payload: {
-                    email: Joi.string().email().required(),
-                    formToken: Joi.string().length(config.get('emailVerification.formToken.length')).required()
+                    formToken: Joi.string().length(config.get('emailVerification.formToken.length')).required(),
+                    verificationToken: Joi.string().length(config.get('emailVerification.verificationToken.length')).required()
                 }
             }
         }

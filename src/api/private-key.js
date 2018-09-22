@@ -1,22 +1,37 @@
 const Boom = require('boom');
 const Joi = require('joi');
 
-const config = require('../../config');
+const { VerificationFlow  } = require('../email-verification/VerificationFlow');
+const { PrivateKeyGenerator } = require('../private-key-generator/PrivateKeyGenerator');
 
 const POST = {
     method: 'POST',
     path: '/private-key',
     async handler(request, h) {
-        const { formToken, verificationToken } = request.payload;
+        const { emailToken, parametersId } = request.payload;
 
+        const tokenData = await VerificationFlow.checkEmailToken(emailToken);
+
+        if (!tokenData) {
+            return Boom.badRequest('Erroneous email token!');
+        }
+
+        const { success, privateKey } = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
         
+        if (!success) {
+            return Boom.badRequest('Could not extract private key!');
+        }
+
+        return {
+            privateKey
+        };
     },
     options: {
-        description: 'Returns the private key corresponding to the specified public key.',
+        description: 'Returns the private key corresponding to a set of parameters.',
         validate: {
             payload: {
-                formToken: Joi.string().length(config.get('emailVerification.formToken.length')).required(),
-                verificationToken: Joi.string().length(config.get('emailVerification.verificationToken.length')).required()
+                emailToken: Joi.string().required(),
+                parametersId: Joi.string().required()
             }
         }
     }

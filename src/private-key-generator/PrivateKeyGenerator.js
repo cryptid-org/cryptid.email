@@ -8,7 +8,7 @@ const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParameters
         async generate(parametersId, publicKey) {
             const [parameters, client] = await Promise.all([IbeParametersService.getParametersForId(parametersId), MetaClient.getInstance()]);
 
-            const { privateKey } = client.extract(parameters.publicParameters, IdentityConverter.convert(publicKey));
+            const { privateKey } = client.extract(parameters.publicParameters, parameters.masterSecret, IdentityConverter.convert(publicKey));
 
             return privateKey;
         }
