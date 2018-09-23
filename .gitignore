@@ -62,3 +62,6 @@ typings/
 
 # Ignoring external dependencies for now
 ext
+
+# Ignoring MeaClient sources for now
+public/js/metaclient/*.js
