@@ -6,7 +6,15 @@ const index = {
     handler: {
         view: 'index'
     }
-}
+};
+
+const encrypt = {
+    method: 'GET',
+    path: '/encrypt',
+    handler: {
+        view: 'encrypt'
+    }
+};
 
 const decrypt = {
     method: 'GET',
@@ -23,6 +31,7 @@ const plugin = {
     register(server, options) {
         server.route([
             index,
+            encrypt,
             decrypt
         ]);
     }
