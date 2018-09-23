@@ -33,6 +33,13 @@ const server = new Hapi.server({
                 directory: {
                     path: '.'
                 }
+            },
+            // FOR TESTING ONLY!
+            options: {
+                cache: {
+                    expiresIn: 1,
+                    privacy: 'private'
+                }
             }
         });
 
