@@ -9,16 +9,16 @@ const KeyEncryption = (function IIFE() {
         async encrypt(publicParameters, publicKey, rawKey) {
             const keyAsBase64 = Base64.fromByteArray(new Uint8Array(rawKey));
 
-            const ciphertext = await IdentityBasedEncryption.encrypt(publicParameters, publicKey, keyAsBase64);
+            const { ciphertext, success } = await IdentityBasedEncryption.encrypt(publicParameters, publicKey, keyAsBase64);
 
-            return JSON.stringify(ciphertext);
+            return success ? JSON.stringify(ciphertext) : null;
         },
         async decrypt(publicParameters, privateKey, ciphertextString) {
             const ciphertext = JSON.parse(ciphertextString);
 
-            const keyAsBase64 = await IdentityBasedEncryption.decrypt(publicParameters, privateKey, ciphertext);
+            const { plaintext, success } = await IdentityBasedEncryption.decrypt(publicParameters, privateKey, ciphertext);
 
-            return Base64.toByteArray(keyAsBase64);
+            return success ? Base64.toByteArray(plaintext) : null;
         }
     }
 })();
