@@ -1,5 +1,5 @@
 import MetaClient from '/js/metaclient/metaclient.esm.js';
-import StringifyConverter from '/js/components/StringifyConverter';
+import StringifyConverter from '/js/components/StringifyConverter.js';
 
 const IdentityBasedEncryption = (function IIFE() {
     const client = MetaClient.getInstance();
