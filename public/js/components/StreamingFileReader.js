@@ -53,7 +53,6 @@ const StreamingFileReader = (function IIFE() {
             this.reader.onabort = onabort.bind(this);
         },
         start() {
-            console.log(this);
             this.reader.readAsArrayBuffer(this.file.slice(0, Math.min(this.totalSize, this.blockSize)));
         }
     };
