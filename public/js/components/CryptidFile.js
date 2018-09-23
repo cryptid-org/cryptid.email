@@ -31,6 +31,36 @@ const CryptidFile = (function IIFE() {
         return fileArray;
     }
 
+    function readNextPart(view, offset) {
+        let pointer = offset;
+        const lengthArray = view.slice(pointer, pointer + SIZE_BYTE_LENGTH);
+        const partLength = converter.fromByteArray(lengthArray);
+        pointer += SIZE_BYTE_LENGTH;
+
+        const dataArray = view.slice(pointer, pointer + partLength);
+        pointer += partLength;
+
+        return { 
+            dataArray,
+            pointer
+        };
+    }
+
+    function parseFile(fileArray) {
+        const fileArrayView = new Uint8Array(fileArray);
+
+        const result = {};
+
+        let pointer = 0;
+        for (const chunkName of ['filenameArray', 'iv', 'keyCiphertextArray', 'dataCiphertext']) {
+            let readResult = readNextPart(fileArrayView, pointer);
+            pointer = readResult.pointer;
+            result[chunkName] = readResult.dataArray;
+        }
+
+        return result;
+    }
+
     return {
         CryptidFile() {
             this.encoder = new TextEncoder();
@@ -42,6 +72,20 @@ const CryptidFile = (function IIFE() {
             const keyCiphertextArray = this.encoder.encode(keyCiphertextString);
 
             return assembleFile(filenameArray, iv, keyCiphertextArray, dataCiphertext);
+        },
+        async parse(fileArray) {
+            const { filenameArray, iv, keyCiphertextArray, dataCiphertext } = parseFile(fileArray);
+
+            const filenameString = this.decoder.decode(filenameArray);
+
+            const keyCiphertextString = this.decoder.decode(keyCiphertextArray);
+
+            return {
+                filenameString,
+                iv,
+                keyCiphertextString,
+                dataCiphertext
+            };
         }
     }
 })();

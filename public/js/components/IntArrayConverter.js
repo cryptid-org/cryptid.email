@@ -6,8 +6,7 @@ const IntArrayConverter = (function IIFE() {
         IntArrayConverter() {
             // Do nothing.
         },
-        fromByteArray(arr) {
-            const x = new Uint8Array(arr);
+        fromByteArray(x) {
             var val = 0;
             for (var i = 0; i < x.length; ++i) {        
                 val += x[i];        
