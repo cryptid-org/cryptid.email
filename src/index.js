@@ -26,6 +26,16 @@ const server = new Hapi.server({
             path: 'templates'
         });
 
+        server.route({
+            method: 'GET',
+            path: '/{param*}',
+            handler: {
+                directory: {
+                    path: '.'
+                }
+            }
+        });
+
         await server.register([{
             plugin: require('./api'),
             routes: {
