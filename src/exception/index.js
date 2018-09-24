@@ -10,6 +10,16 @@ const makeException = function makeException(obj) {
     return obj;
 };
 
+const EmailSendingException = function EmailSendingException(email) {
+    makeException({
+        type: 'EmailSendingException',
+        message: 'Failed to send the verification message to the provided email address.',
+        data: {
+            email
+        }
+    });
+};
+
 const IbeExtractError = function IbeExtractError(parametersId, identity) {
     return makeException({
         type: 'IbeExtractError',
@@ -29,6 +39,16 @@ const IbeSetupError = function IbeSetupError() {
     });
 };
 
+const InvalidVerificationToken = function InvalidVerificationToken(verificationToken) {
+    return makeException({
+        type: 'InvalidVerificationToken',
+        message: 'The provided verification token is not correct.',
+        data: {
+            verification
+        }
+    });
+};
+
 const MissingParametersError = function MissingParametersError(parametersId) {
     return makeException({
         type: 'MissingParametersError',
@@ -40,7 +60,9 @@ const MissingParametersError = function MissingParametersError(parametersId) {
 };
 
 module.exports = {
+    EmailSendingException,
     IbeExtractError,
     IbeSetupError,
+    InvalidVerificationToken,
     MissingParametersError
 };

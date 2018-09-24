@@ -1,7 +1,8 @@
+const { Validation } = require('monet');
 const sendGridMail = require('@sendgrid/mail');
 
+const { EmailSendingException } = require('../exception');
 const config = require('../../config');
-
 
 const makeEmailSender = function makeEmailSender({ config, sendGridMail }) {
     sendGridMail.setApiKey(config.get('emailVerification.sendGrid.apiKey'));
@@ -10,6 +11,8 @@ const makeEmailSender = function makeEmailSender({ config, sendGridMail }) {
         sendCode(recipient, verificationToken) {
             if (config.get('env') == 'development') {
                 console.log(`Sending token ${verificationToken} to ${recipient}.`);
+
+                return Validation.Success();
             } else {
                 const message = {
                     to: recipient,
@@ -19,7 +22,13 @@ const makeEmailSender = function makeEmailSender({ config, sendGridMail }) {
                     html: `Please enter the following code to verify your email address: <pre>${verificationToken}</pre>`
                 };
     
-                sendGridMail.send(message);
+                try {
+                    sendGridMail.send(message);
+
+                    return Validation.Success();
+                } catch (err) {
+                    return Validation.Fail(EmailSendingException(recipient));
+                }
             }
         }
     }
