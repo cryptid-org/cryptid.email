@@ -30,7 +30,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
                 .bind(value => value.verificationToken == config.get('emailVerification.formToken.placeholder') ? Maybe.Just(value) : Maybe.Nothing());
 
             if (value.isNothing()) {
-                return value;
+                return Maybe.Nothing();
             }
 
             clearTimeout(value.just().timeoutHandle);
@@ -55,7 +55,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
                 .bind(value => value.verificationToken == verificationToken ? Maybe.Just(value) : Maybe.Nothing());
 
             if (saved.isNothing()) {
-                return saved;
+                return Maybe.Nothing();
             }
 
             clearTimeout(saved.just().timeoutHandle);

@@ -11,7 +11,7 @@ const makeException = function makeException(obj) {
 };
 
 const EmailSendingException = function EmailSendingException(email) {
-    makeException({
+    return makeException({
         type: 'EmailSendingException',
         message: 'Failed to send the verification message to the provided email address.',
         data: {
@@ -39,6 +39,16 @@ const IbeSetupError = function IbeSetupError() {
     });
 };
 
+const InvalidFormTokenException = function InvalidFormTokenException(formToken) {
+    return makeException({
+        type: 'InvalidFormTokenException',
+        message: 'The supplied form token is invalid.',
+        data: {
+            formToken
+        }
+    });
+};
+
 const InvalidVerificationToken = function InvalidVerificationToken(verificationToken) {
     return makeException({
         type: 'InvalidVerificationToken',
@@ -63,6 +73,7 @@ module.exports = {
     EmailSendingException,
     IbeExtractError,
     IbeSetupError,
+    InvalidFormTokenException,
     InvalidVerificationToken,
     MissingParametersError
 };
