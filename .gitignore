@@ -65,3 +65,6 @@ ext
 
 # Ignoring MeaClient sources for now
 public/js/metaclient/*.js
+
+# Do not include .env files
+*.env
