@@ -4,8 +4,8 @@ const MetaClient = require('../../ext/metaclient.cjs');
 
 const config = require('../../config');
 
+const logger = require('../logger');
 const { IbeSetupError } = require('../exception');
-
 const { IbeParametersRepository } = require('./repository');
 
 const INSTANTLY = 0;
@@ -24,6 +24,8 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
     const rotateParametersIn = function rotateParametersIn(ms) {
         return new Promise((resolve, reject) => {
             setTimeout(async function rotate() {
+                logger.info('Creating new IBE parameters.');
+
                 const instance = await MetaClient.getInstance();
                 const { success, masterSecret, publicParameters } = instance.setup(config.get('ibe.securityLevel'));
 
@@ -35,8 +37,12 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
                 
                 const parameters = parameterFactory(masterSecret, publicParameters);
 
+                logger.info('Created new parameters with the following public parameters.', {
+                    publicParameters: parameters.publicParameters
+                });
+
                 await IbeParametersRepository.setCurrentParameters(parameters);
-                    
+
                 rotateParametersIn(config.get('ibe.parameterChangeInterval'));
 
                 resolve(DONE);

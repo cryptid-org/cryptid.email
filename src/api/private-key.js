@@ -10,6 +10,8 @@ const POST = {
     async handler(request) {
         const { emailToken, parametersId } = request.payload;
 
+        request.logger.info('Private key requested with token and id.', { emailToken, parametersId });
+
         const tokenData = await VerificationFlow.checkEmailToken(emailToken);
 
         if (tokenData.isFail()) {

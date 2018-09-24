@@ -10,10 +10,14 @@ const GET = {
         const id = Maybe.fromNull(request.params.id).map(encodeURIComponent);
 
         if (id.isJust()) {
+            request.logger.info('Public parameters with id requested.', { id });
+
             const parameters = await IbeParametersService.getPublicParametersForId(id.just());
 
             return parameters.orJust(Boom.badRequest('Could not find the parameters corresponding to the specified ID!'));
         } else {
+            request.logger.info('Current public parameters requested.');
+
             const parameters = await IbeParametersService.getCurrentPublicParameters();
 
             return parameters.orJust(Boom.internal('Could not retrieve the current parameters.'));

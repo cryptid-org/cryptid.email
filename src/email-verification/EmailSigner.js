@@ -1,7 +1,8 @@
 const { Validation } = require('monet');
 const jwt = require('jsonwebtoken');
 
-const { InvalidEmailTokenException } = require('../exception');
+const logger = require('../logger');
+const { InvalidEmailTokenError } = require('../exception');
 const config = require('../../config');
 
 const makeEmailSigner = function makeEmailSigner({ config, jwt }) {
@@ -24,7 +25,9 @@ const makeEmailSigner = function makeEmailSigner({ config, jwt }) {
             try {
                 return Validation.Success(jwt.verify(token, config.get('emailVerification.sign.secret'), options));
             } catch(err) {
-                return Validation.Fail(InvalidEmailTokenException(token));
+                logger.info('Invalid email token.', { token }, err);
+
+                return Validation.Fail(InvalidEmailTokenError(token));
             }
         }
     };

@@ -1,18 +1,18 @@
-const Exception = {
+const Err = {
     toString() {
         return `${this.type}: ${this.message}`;
     }
 };
 
-const makeException = function makeException(obj) {
-    Object.setPrototypeOf(obj, Exception);
+const makeError = function makeError(obj) {
+    Object.setPrototypeOf(obj, Err);
 
     return obj;
 };
 
-const EmailSendingException = function EmailSendingException(email) {
-    return makeException({
-        type: 'EmailSendingException',
+const EmailSendingError = function EmailSendingError(email) {
+    return makeError({
+        type: 'EmailSendingError',
         message: 'Failed to send the verification message to the provided email address.',
         data: {
             email
@@ -20,16 +20,16 @@ const EmailSendingException = function EmailSendingException(email) {
     });
 };
 
-const FormTokenGenerationException = function FormTokenGenerationException() {
-    return makeException({
-        type: 'FormTokenGenerationException',
+const FormTokenGenerationError = function FormTokenGenerationError() {
+    return makeError({
+        type: 'FormTokenGenerationError',
         message: 'Failed to generate a form token.',
         data: {}
     });
 };
 
 const IbeExtractError = function IbeExtractError(parametersId, identity) {
-    return makeException({
+    return makeError({
         type: 'IbeExtractError',
         message: 'Could not extract the private key corresponding to the specified identity.',
         data: {
@@ -40,16 +40,16 @@ const IbeExtractError = function IbeExtractError(parametersId, identity) {
 };
 
 const IbeSetupError = function IbeSetupError() {
-    return makeException({
+    return makeError({
         type: 'IbeSetupError',
         message: 'Could not setup the IBE system (master secret, public parameters).',
         data: {}
     });
 };
 
-const InvalidEmailTokenException = function InvalidEmailTokenException(emailToken) {
-    return makeException({
-        type: 'InvalidEmailTokenException',
+const InvalidEmailTokenError = function InvalidEmailTokenError(emailToken) {
+    return makeError({
+        type: 'InvalidEmailTokenError',
         message: 'The supplied email token in invalid.',
         data: {
             emailToken
@@ -57,9 +57,9 @@ const InvalidEmailTokenException = function InvalidEmailTokenException(emailToke
     });
 };
 
-const InvalidFormTokenException = function InvalidFormTokenException(formToken) {
-    return makeException({
-        type: 'InvalidFormTokenException',
+const InvalidFormTokenError = function InvalidFormTokenError(formToken) {
+    return makeError({
+        type: 'InvalidFormTokenError',
         message: 'The supplied form token is invalid.',
         data: {
             formToken
@@ -67,9 +67,9 @@ const InvalidFormTokenException = function InvalidFormTokenException(formToken) 
     });
 };
 
-const InvalidVerificationTokenException = function InvalidVerificationTokenException(verificationToken) {
-    return makeException({
-        type: 'InvalidVerificationTokenException',
+const InvalidVerificationTokenError = function InvalidVerificationTokenError(verificationToken) {
+    return makeError({
+        type: 'InvalidVerificationTokenError',
         message: 'The provided verification token is not correct.',
         data: {
             verificationToken
@@ -78,7 +78,7 @@ const InvalidVerificationTokenException = function InvalidVerificationTokenExcep
 };
 
 const MissingParametersError = function MissingParametersError(parametersId) {
-    return makeException({
+    return makeError({
         type: 'MissingParametersError',
         message: 'No parameters found for the specified ID.',
         data: {
@@ -88,12 +88,12 @@ const MissingParametersError = function MissingParametersError(parametersId) {
 };
 
 module.exports = {
-    EmailSendingException,
-    FormTokenGenerationException,
+    EmailSendingError,
+    FormTokenGenerationError,
     IbeExtractError,
     IbeSetupError,
-    InvalidEmailTokenException,
-    InvalidFormTokenException,
-    InvalidVerificationTokenException,
+    InvalidEmailTokenError,
+    InvalidFormTokenError,
+    InvalidVerificationTokenError,
     MissingParametersError
 };

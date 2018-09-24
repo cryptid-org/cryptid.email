@@ -12,6 +12,8 @@ const emailAddress = {
         async handler(request, h) {
             const { email, formToken } = request.payload;
 
+            request.logger.info('Verification initiated for address.', { email });
+
             const result = await VerificationFlow.initiateVerificationForAddress(email, formToken);
 
             return result.cata(
@@ -37,6 +39,8 @@ const emailToken = {
         path: '/verification/email/token',
         async handler(request) {
             const { formToken, verificationToken } = request.payload;
+
+            request.logger.info('Received verification token.', { verificationToken });
 
             const result = await VerificationFlow.checkVerificationToken(formToken, verificationToken);
 

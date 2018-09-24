@@ -1,4 +1,4 @@
-const { FormTokenGenerationException, InvalidFormTokenException } = require('../exception');
+const { FormTokenGenerationError, InvalidFormTokenError } = require('../exception');
 const { TokenRepository } = require('./repository');
 const { EmailSender } = require('./EmailSender');
 
@@ -7,13 +7,13 @@ const makeEmailVerificationService = function makeEmailVerificationService({ Tok
         async getFormToken() {
             const tokenResult = await TokenRepository.requestFormToken();
 
-            return tokenResult.toValidation(FormTokenGenerationException());
+            return tokenResult.toValidation(FormTokenGenerationError());
         },
         async initiateEmailVerification(email, formToken) {
             const verificationToken = await TokenRepository.requestVerificationToken(email, formToken);
 
             return verificationToken
-                .toValidation(InvalidFormTokenException(formToken))
+                .toValidation(InvalidFormTokenError(formToken))
                 .bind(token => EmailSender.sendCode(email, token));
         },
         async getEmailForVerificationToken(formToken, verificationToken) {
