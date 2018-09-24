@@ -12,19 +12,11 @@ const GET = {
         if (id.isJust()) {
             const parameters = await IbeParametersService.getPublicParametersForId(id.just());
 
-            if (parameters.isJust()) {
-                return parameters.just();
-            } else {
-                return Boom.badRequest('Could not find the parameters corresponding to the specified ID!');
-            }
+            return parameters.orJust(Boom.badRequest('Could not find the parameters corresponding to the specified ID!'));
         } else {
             const parameters = await IbeParametersService.getCurrentPublicParameters();
 
-            if (parameters.isJust()) {
-                return parameters.just();
-            } else {
-                return Boom.internal('Could not retrieve the current parameters.');
-            }
+            return parameters.orJust(Boom.internal('Could not retrieve the current parameters.'));
         }
     },
     options: {

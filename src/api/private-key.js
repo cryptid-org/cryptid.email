@@ -16,15 +16,12 @@ const POST = {
             return Boom.badRequest('Erroneous email token!');
         }
 
-        const privateKey = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
+        const pkgResult = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
         
-        if (!privateKey) {
-            return Boom.badRequest('Could not extract private key!');
-        }
-
-        return {
-            privateKey
-        };
+        return pkgResult.cata(
+            err => Boom.badRequest('Could not extract private key!', err),
+            privateKey => ({ privateKey })
+        );
     },
     options: {
         description: 'Returns the private key corresponding to a set of parameters.',

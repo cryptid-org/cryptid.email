@@ -1,18 +1,27 @@
+const { Validation } = require('monet');
+
 const MetaClient = require('../../ext/metaclient.cjs');
 
+const { IbeExtractError, MissingParametersError } = require('../exception');
 const { IbeParametersService } = require('../ibe-parameters/IbeParametersService');
 const { IdentityConverter } = require('./identity-converter');
 
 const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParametersService, IdentityConverter, MetaClient }) {
     return {
-        async generate(parametersId, publicKey) {
-            const [parameters, client] = await Promise.all([IbeParametersService.getParametersForId(parametersId), MetaClient.getInstance()]);
+        async generate(parametersId, identity) {
+            const parameters = await IbeParametersService.getParametersForId(parametersId);
 
-            const converted = IdentityConverter.convert(publicKey)
+            if (parameters.isNothing()) {
+                return Validation.Fail(MissingParametersError(parametersId));
+            }
 
-            const { privateKey } = client.extract(parameters.publicParameters, parameters.masterSecret, converted);
+            const client = await MetaClient.getInstance();
 
-            return privateKey;
+            const convertedIdentity = IdentityConverter.convert(identity);
+
+            const { success, privateKey } = client.extract(parameters.just().publicParameters, parameters.just().masterSecret, convertedIdentity);
+
+            return success ? Validation.Success(privateKey) : Validation.Fail(IbeExtractError(parametersId, identity));
         }
     };
 };
