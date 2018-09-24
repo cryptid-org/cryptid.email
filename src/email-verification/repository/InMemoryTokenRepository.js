@@ -1,7 +1,7 @@
+const { Maybe } = require('monet');
 const randomstring = require('randomstring');
 
 const config = require('../../../config');
-
 
 const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ config, randomstring }) {
     const generateFormToken = () => randomstring.generate(config.get('emailVerification.formToken'));
@@ -22,16 +22,18 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
                 timeoutHandle
             });
 
-            return token;
+            return Maybe.fromNull(token);
         },
         async requestVerificationToken(email, formToken) {
-            const value = storage.get(formToken);
+            const value = Maybe
+                .fromNull(storage.get(formToken))
+                .bind(value => value.verificationToken == config.get('emailVerification.formToken.placeholder') ? Maybe.Just(value) : Maybe.Nothing());
 
-            if (!value || (value.verificationToken != config.get('emailVerification.formToken.placeholder'))) {
-                return null;
+            if (value.isNothing()) {
+                return value;
             }
 
-            clearTimeout(value.timeoutHandle);
+            clearTimeout(value.just().timeoutHandle);
 
             const verificationToken = generateVerificationToken();
 
@@ -40,25 +42,27 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
             }, config.get('emailVerification.verificationToken.expiration') * 1000);
 
             storage.set(formToken, {
-                verificationToken,
                 email,
-                timeoutHandle
+                timeoutHandle,
+                verificationToken
             });
 
-            return verificationToken;
+            return Maybe.Just(verificationToken);
         },
         async checkVerificationToken(formToken, verificationToken) {
-            const saved = storage.get(formToken);
+            const saved = Maybe
+                .fromNull(storage.get(formToken))
+                .bind(value => value.verificationToken == verificationToken ? Maybe.Just(value) : Maybe.Nothing());
 
-            if (!saved || (saved.verificationToken != verificationToken)) {
-                return null;
+            if (saved.isNothing()) {
+                return saved;
             }
 
-            clearTimeout(saved.timeoutHandle);
+            clearTimeout(saved.just().timeoutHandle);
 
             storage.delete(formToken);
 
-            return saved.email;
+            return saved.map(value => value.email);
         }
     };
 };

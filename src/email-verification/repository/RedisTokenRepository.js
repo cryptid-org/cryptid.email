@@ -1,5 +1,6 @@
 const { promisify }  = require('util');
 
+const { Maybe } = require('monet');
 const randomstring = require('randomstring');
 const redis = require('redis');
 
@@ -24,36 +25,33 @@ const makeRedisTokenRepository = function makeRedisTokenRepository({ config, ran
             const result = await setAsync(token, config.get('emailVerification.formToken.placeholder'), 
                                           'EX', config.get('emailVerification.formToken.placeholderExpiration'));
 
-            return result == OK ? token : null;
+            return Maybe.fromNull(result == OK ? token : null);
         },
         async requestVerificationToken(email, formToken) {
             const placeholderValue = await getAsync(formToken);
 
             if (placeholderValue != config.get('emailVerification.formToken.placeholder')) {
-                return null;
+                return Maybe.Nothing();
             }
 
             const verificationToken = generateVerificationToken();
 
-            const value = {
-                verificationToken,
-                email
-            };
+            const value = { verificationToken, email };
 
             const result = await setAsync(formToken, JSON.stringify(value), 'EX', config.get('emailVerification.verificationToken.expiration'));
 
-            return result == OK ? verificationToken : null;
+            return Maybe.fromNull(result == OK ? verificationToken : null);
         },
         async checkVerificationToken(formToken, verificationToken) {
             const value = await getAsync(formToken);
 
             if (value.verificationToken != verificationToken) {
-                return null;
+                return Maybe.Nothing();
             }
 
             await delAsync(formToken);
 
-            return value.email;
+            return Maybe.Just(value.email);
         }
     };
 };
