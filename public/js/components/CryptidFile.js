@@ -52,7 +52,7 @@ const CryptidFile = (function IIFE() {
         const result = {};
 
         let pointer = 0;
-        for (const chunkName of ['filenameArray', 'iv', 'keyCiphertextArray', 'dataCiphertext']) {
+        for (const chunkName of ['filenameArray', 'parametersIdArray', 'iv', 'keyCiphertextArray', 'dataCiphertext']) {
             let readResult = readNextPart(fileArrayView, pointer);
             pointer = readResult.pointer;
             result[chunkName] = readResult.dataArray;
@@ -66,22 +66,23 @@ const CryptidFile = (function IIFE() {
             this.encoder = new TextEncoder();
             this.decoder = new TextDecoder();
         },
-        async build({ filenameString, iv, keyCiphertextString, dataCiphertext }) {
+        async build({ filenameString, parametersIdString, iv, keyCiphertextString, dataCiphertext }) {
             const filenameArray = this.encoder.encode(filenameString);
-
             const keyCiphertextArray = this.encoder.encode(keyCiphertextString);
+            const parametersIdArray = this.encoder.encode(parametersIdString);
 
-            return assembleFile(filenameArray, iv, keyCiphertextArray, dataCiphertext);
+            return assembleFile(filenameArray, parametersIdArray, iv, keyCiphertextArray, dataCiphertext);
         },
         async parse(fileArray) {
-            const { filenameArray, iv, keyCiphertextArray, dataCiphertext } = parseFile(fileArray);
+            const { filenameArray, parametersIdArray, iv, keyCiphertextArray, dataCiphertext } = parseFile(fileArray);
 
             const filenameString = this.decoder.decode(filenameArray);
-
+            const parametersIdString = this.decoder.decode(parametersIdArray);
             const keyCiphertextString = this.decoder.decode(keyCiphertextArray);
 
             return {
                 filenameString,
+                parametersIdString,
                 iv,
                 keyCiphertextString,
                 dataCiphertext

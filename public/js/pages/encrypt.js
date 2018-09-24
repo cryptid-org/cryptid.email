@@ -17,9 +17,10 @@ encryptButton.addEventListener('click', async function onEncryptClick() {
 
     const contentEncryptionResult = await encryptContents(contents);
 
-    const keyCiphertext = await encryptContentEncryptionKey(contentEncryptionResult.rawContentEncryptionKey, email);
+    const { keyCiphertext, parametersId } = await encryptContentEncryptionKey(contentEncryptionResult.rawContentEncryptionKey, email);
 
-    const cryptidBlob = await embedIntoCryptidFile(file.name, contentEncryptionResult.iv, keyCiphertext, contentEncryptionResult.ciphertext);
+    const cryptidBlob = await embedIntoCryptidFile(file.name, parametersId, contentEncryptionResult.iv,
+                                                   keyCiphertext, contentEncryptionResult.ciphertext);
 
     saveAs(cryptidBlob, `${file.name}.cryptid`);
 });
@@ -69,15 +70,21 @@ async function encryptContentEncryptionKey(rawKey, email) {
         email
     };
 
-    return ke.encrypt(parameters, publicKey, rawKey);
+    const keyCiphertext = await ke.encrypt(parameters, publicKey, rawKey);
+
+    return {
+        keyCiphertext,
+        parametersId: parameters.id
+    };
 }
 
-async function embedIntoCryptidFile(filename, iv, keyCiphertext, dataCiphertext) {
+async function embedIntoCryptidFile(filename, parametersId, iv, keyCiphertext, dataCiphertext) {
     const cf = Object.create(CryptidFile);
     cf.CryptidFile();
 
     const fileArray = await cf.build({
         filenameString: filename,
+        parametersIdString: parametersId,
         iv,
         keyCiphertextString: keyCiphertext,
         dataCiphertext
