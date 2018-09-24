@@ -1,3 +1,5 @@
+const { Maybe }  = require('monet');
+
 const makeInMemoryIbeParametersRepository = function makeInMemoryIbeParametersRepository() {
     let currentParameters = null;
 
@@ -5,14 +7,10 @@ const makeInMemoryIbeParametersRepository = function makeInMemoryIbeParametersRe
 
     return {
         async getCurrentParameters() {
-            if (!currentParameters) {
-                return null;
-            }
-            
-            return currentParameters;
+            return Maybe.fromNull(currentParameters);
         },
         async getParametersForId(parametersId) {
-            return parameterMap.get(parametersId);
+            return Maybe.fromNull(parameterMap.get(parametersId));
         },
         async setCurrentParameters(parameters) {
             currentParameters = parameters;

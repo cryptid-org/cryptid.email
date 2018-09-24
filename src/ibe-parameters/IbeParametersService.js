@@ -4,33 +4,46 @@ const MetaClient = require('../../ext/metaclient.cjs');
 
 const config = require('../../config');
 
+const { IbeSetupError } = require('../exception');
+
 const { IbeParametersRepository } = require('./repository');
 
 const INSTANTLY = 0;
 const DONE = true;
 
 const makeIbeParametersService = function makeIbeParametersService({ config, IbeParametersRepository, MetaClient, uuid }) {
+    const parameterFactory = function parameterFactory(masterSecret, publicParameters) {
+        return {
+            id: uuid(),
+            createdAt: Date.now(),
+            masterSecret,
+            publicParameters
+        };
+    };
+
     const rotateParametersIn = function rotateParametersIn(ms) {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                MetaClient.getInstance()
-                    .then(instance => instance.setup(config.get('ibe.securityLevel')))
-                    .then(result => {
-                        return Object.assign({
-                            id: uuid(),
-                            createdAt: Date.now()
-                        }, result);
-                    })
-                    .then(parameters => IbeParametersRepository.setCurrentParameters(parameters))
-                    .then(() => {
-                        resolve();
+            setTimeout(async function rotate() {
+                const instance = await MetaClient.getInstance();
+                const { success, masterSecret, publicParameters } = instance.setup(config.get('ibe.securityLevel'));
 
-                        rotateParametersIn(config.get('ibe.parameterChangeInterval'));
+                if (!success) {
+                    reject(IbeSetupError());
 
-                        return DONE;
-                    });
-            }, ms);
-        });
+                    return;
+                }
+                
+                const parameters = parameterFactory(masterSecret, publicParameters);
+
+                IbeParametersRepository.setCurrentParameters(parameters);
+                    
+                resolve();
+
+                rotateParametersIn(config.get('ibe.parameterChangeInterval'));
+
+                return DONE;
+            });
+        }, ms);
     };
 
     const firstSetup = IbeParametersRepository.getCurrentParameters()
@@ -52,28 +65,27 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
             return rotateParametersIn(INSTANTLY);
         });
 
-    function convertToPublicParameters(parameters) {
-        return Object.assign({
-            id: parameters.id
-        }, parameters.publicParameters);
+    function filterFields(parameters) {
+        return {
+            id: parameters.id,
+            publicParameters: parameters.publicParameters
+        };
     }
 
     return {
         async getCurrentPublicParameters() {
             await firstSetup;
-            
-            const params = await IbeParametersRepository.getCurrentParameters();
 
-            return convertToPublicParameters(params);
+            const parametersMaybe = await IbeParametersRepository.getCurrentParameters();
+
+            return parametersMaybe.map(filterFields);
         },
         async getPublicParametersForId(parametersId) {
-            const params = await IbeParametersRepository.getParametersForId(parametersId);
+            const parametersMaybe = await IbeParametersRepository.getParametersForId(parametersId);
 
-            return convertToPublicParameters(params);
+            return parametersMaybe.map(filterFields);
         },
-        getParametersForId(parametersId) {
-            return IbeParametersRepository.getParametersForId(parametersId);
-        }
+        getParametersForId: parametersId => IbeParametersRepository.getParametersForId(parametersId)
     };
 };
 
