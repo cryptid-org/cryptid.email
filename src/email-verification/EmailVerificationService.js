@@ -14,8 +14,8 @@ const makeEmailVerificationService = function makeEmailVerificationService({ Tok
                 .toValidation(InvalidFormTokenException(formToken))
                 .bind(token => EmailSender.sendCode(email, token));
         },
-        async checkVerificationToken(formToken, verificationToken) {
-            return TokenRepository.checkVerificationToken(formToken, verificationToken);
+        async getEmailForVerificationToken(formToken, verificationToken) {
+            return TokenRepository.getEmailForVerificationToken(formToken, verificationToken);
         }
     }
 };

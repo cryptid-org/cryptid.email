@@ -49,7 +49,7 @@ const makeInMemoryTokenRepository = function makeInMemoryTokenRepository({ confi
 
             return Maybe.Just(verificationToken);
         },
-        async checkVerificationToken(formToken, verificationToken) {
+        async getEmailForVerificationToken(formToken, verificationToken) {
             const saved = Maybe
                 .fromNull(storage.get(formToken))
                 .bind(value => value.verificationToken == verificationToken ? Maybe.Just(value) : Maybe.Nothing());

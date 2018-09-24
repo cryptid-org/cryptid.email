@@ -35,14 +35,14 @@ const IbeSetupError = function IbeSetupError() {
     return makeException({
         type: 'IbeSetupError',
         message: 'Could not setup the IBE system (master secret, public parameters).',
-        data: {},
+        data: {}
     });
 };
 
 const InvalidEmailTokenException = function InvalidEmailTokenException(emailToken) {
     return makeException({
         type: 'InvalidEmailTokenException',
-        message: 'The supplied email token in invalid'.,
+        message: 'The supplied email token in invalid.',
         data: {
             emailToken
         }
@@ -59,12 +59,12 @@ const InvalidFormTokenException = function InvalidFormTokenException(formToken) 
     });
 };
 
-const InvalidVerificationToken = function InvalidVerificationToken(verificationToken) {
+const InvalidVerificationTokenException = function InvalidVerificationTokenException(verificationToken) {
     return makeException({
-        type: 'InvalidVerificationToken',
+        type: 'InvalidVerificationTokenException',
         message: 'The provided verification token is not correct.',
         data: {
-            verification
+            verificationToken
         }
     });
 };
@@ -85,6 +85,6 @@ module.exports = {
     IbeSetupError,
     InvalidEmailTokenException,
     InvalidFormTokenException,
-    InvalidVerificationToken,
+    InvalidVerificationTokenException,
     MissingParametersError
 };

@@ -42,7 +42,7 @@ const makeRedisTokenRepository = function makeRedisTokenRepository({ config, ran
 
             return Maybe.fromNull(result == OK ? verificationToken : null);
         },
-        async checkVerificationToken(formToken, verificationToken) {
+        async getEmailForVerificationToken(formToken, verificationToken) {
             const value = await getAsync(formToken);
 
             if (value.verificationToken != verificationToken) {
