@@ -13,10 +13,9 @@ const makeVerificationFlow = function makeVerificationFlow({ EmailSigner, EmailV
         async checkVerificationToken(formToken, verificationToken) {
             const email = await EmailVerificationService.getEmailForVerificationToken(formToken, verificationToken);
 
-            email
-                .toValidation()
-
-            return EmailSigner.sign(email);
+            return email
+                .toValidation(InvalidVerificationTokenException(verificationToken))
+                .map(address => EmailSigner.sign(address));
         },
         async checkEmailToken(emailToken) {
             return EmailSigner.verify(emailToken);

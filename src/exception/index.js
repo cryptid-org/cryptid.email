@@ -20,6 +20,14 @@ const EmailSendingException = function EmailSendingException(email) {
     });
 };
 
+const FormTokenGenerationException = function FormTokenGenerationException() {
+    return makeException({
+        type: 'FormTokenGenerationException',
+        message: 'Failed to generate a form token.',
+        data: {}
+    });
+};
+
 const IbeExtractError = function IbeExtractError(parametersId, identity) {
     return makeException({
         type: 'IbeExtractError',
@@ -81,6 +89,7 @@ const MissingParametersError = function MissingParametersError(parametersId) {
 
 module.exports = {
     EmailSendingException,
+    FormTokenGenerationException,
     IbeExtractError,
     IbeSetupError,
     InvalidEmailTokenException,

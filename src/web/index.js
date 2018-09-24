@@ -20,9 +20,12 @@ const decrypt = {
     method: 'GET',
     path: '/decrypt',
     async handler(request, h) {
-        const formToken = await VerificationFlow.createVerificationForm();
+        const result = await VerificationFlow.createVerificationForm();
 
-        return h.view('decrypt', { formToken });
+        return result.cata(
+            err => h.view('erorr', err.message),
+            formToken => h.view('decrypt', { formToken })
+        );
     }
 };
 

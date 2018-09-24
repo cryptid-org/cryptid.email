@@ -6,7 +6,7 @@ const { PrivateKeyGenerator } = require('../private-key-generator/PrivateKeyGene
 const POST = {
     method: 'POST',
     path: '/delete-me',
-    async handler(request, h) {
+    async handler(request) {
         const { email, parametersId } = request.payload;
 
         const privateKey = await PrivateKeyGenerator.generate(parametersId, { email });

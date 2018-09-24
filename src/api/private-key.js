@@ -7,16 +7,16 @@ const { PrivateKeyGenerator } = require('../private-key-generator/PrivateKeyGene
 const POST = {
     method: 'POST',
     path: '/private-key',
-    async handler(request, h) {
+    async handler(request) {
         const { emailToken, parametersId } = request.payload;
 
         const tokenData = await VerificationFlow.checkEmailToken(emailToken);
 
-        if (!tokenData) {
+        if (tokenData.isFail()) {
             return Boom.badRequest('Erroneous email token!');
         }
 
-        const pkgResult = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.email });
+        const pkgResult = await PrivateKeyGenerator.generate(parametersId, { email: tokenData.success().email });
         
         return pkgResult.cata(
             err => Boom.badRequest('Could not extract private key!', err),

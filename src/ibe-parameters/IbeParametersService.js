@@ -35,15 +35,13 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
                 
                 const parameters = parameterFactory(masterSecret, publicParameters);
 
-                IbeParametersRepository.setCurrentParameters(parameters);
+                await IbeParametersRepository.setCurrentParameters(parameters);
                     
-                resolve();
-
                 rotateParametersIn(config.get('ibe.parameterChangeInterval'));
 
-                return DONE;
-            });
-        }, ms);
+                resolve(DONE);
+            }, ms);
+        });
     };
 
     const firstSetup = IbeParametersRepository.getCurrentParameters()

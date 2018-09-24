@@ -14,11 +14,10 @@ const emailAddress = {
 
             const result = await VerificationFlow.initiateVerificationForAddress(email, formToken);
 
-            if (!result) {
-                return Boom.badRequest('Invalid form token!');
-            }
-
-            return h.continue;
+            return result.cata(
+                err => Boom.badRequest('Could not initiate verification!', err),
+                () => h.response().code(201)
+            );
         },
         options: {
             description: 'Initiates the email verification process by sending a verification token.',
@@ -36,18 +35,15 @@ const emailToken = {
     POST: {
         method: 'POST',
         path: '/verification/email/token',
-        async handler(request, h) {
+        async handler(request) {
             const { formToken, verificationToken } = request.payload;
 
-            const emailToken = await VerificationFlow.checkVerificationToken(formToken, verificationToken);
+            const result = await VerificationFlow.checkVerificationToken(formToken, verificationToken);
 
-            if (!emailToken) {
-                return Boom.badRequest('Invalid form or verification token!');
-            }
-
-            return {
-                emailToken
-            };
+            return result.cata(
+                err => Boom.badRequest('Invalid form token or verification token!', err),
+                emailToken => ({ emailToken })
+            );
         },
         options: {
             description: 'Checks if the token matches the email address.',
