@@ -134,10 +134,10 @@ async function obtainRawSymmetricKey({ parametersIdString, keyCiphertextString }
     const ke = Object.create(KeyEncryption);
     ke.KeyEncryption();
 
-    const publicParameters = await api.getPublicParametersForId(parametersIdString);
-    console.log(publicParameters);
+    const parameters = await api.getPublicParametersForId(parametersIdString);
+    console.log(parameters);
     
-    return ke.decrypt(publicParameters, privateKey, keyCiphertextString);
+    return ke.decrypt(parameters.publicParameters, privateKey, keyCiphertextString);
 }
 
 async function decryptData(rawSymmetricKey, { iv, dataCiphertext }) {

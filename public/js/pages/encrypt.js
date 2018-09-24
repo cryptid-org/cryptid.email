@@ -70,7 +70,7 @@ async function encryptContentEncryptionKey(rawKey, email) {
         email
     };
 
-    const keyCiphertext = await ke.encrypt(parameters, publicKey, rawKey);
+    const keyCiphertext = await ke.encrypt(parameters.publicParameters, publicKey, rawKey);
 
     return {
         keyCiphertext,
