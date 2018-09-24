@@ -4,14 +4,12 @@ const makeInMemoryIbeParametersRepository = function makeInMemoryIbeParametersRe
     const parameterMap = new Map();
 
     return {
-        async getCurrentPublicParameters() {
+        async getCurrentParameters() {
             if (!currentParameters) {
                 return null;
             }
             
-            return Object.assign({
-                id: currentParameters.id
-            }, currentParameters.publicParameters);
+            return currentParameters;
         },
         async getParametersForId(parametersId) {
             return parameterMap.get(parametersId);

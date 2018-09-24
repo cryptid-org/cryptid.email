@@ -9,7 +9,7 @@ const GET = {
         if (!id) {
             return IbeParametersService.getCurrentPublicParameters();
         } else {
-            return IbeParametersService.getParametersForId(id);
+            return IbeParametersService.getPublicParametersForId(id);
         }        
     },
     options: {

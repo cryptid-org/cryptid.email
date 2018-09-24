@@ -33,7 +33,7 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
         });
     };
 
-    const firstSetup = IbeParametersRepository.getCurrentPublicParameters()
+    const firstSetup = IbeParametersRepository.getCurrentParameters()
         .then(pp => {
             if (pp != null) {
                 const now = Date.now();
@@ -52,13 +52,26 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
             return rotateParametersIn(INSTANTLY);
         });
 
+    function convertToPublicParameters(parameters) {
+        return Object.assign({
+            id: parameters.id
+        }, parameters.publicParameters);
+    }
+
     return {
         async getCurrentPublicParameters() {
             await firstSetup;
             
-            return IbeParametersRepository.getCurrentPublicParameters();
+            const params = await IbeParametersRepository.getCurrentParameters();
+
+            return convertToPublicParameters(params);
         },
-        async getParametersForId(parametersId) {
+        async getPublicParametersForId(parametersId) {
+            const params = await IbeParametersRepository.getParametersForId(parametersId);
+
+            return convertToPublicParameters(params);
+        },
+        getParametersForId(parametersId) {
             return IbeParametersRepository.getParametersForId(parametersId);
         }
     };
