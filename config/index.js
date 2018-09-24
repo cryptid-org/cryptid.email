@@ -28,7 +28,8 @@ const config = convict({
                 doc: 'The SendGrid API key.',
                 format: String,
                 default: 'WILL_NOT_WORK',
-                env: 'SENDGRID_API_KEY'
+                env: 'SENDGRID_API_KEY',
+                sensitive: true
             },
             senderAddress: {
                 doc: 'The address that will appear as the sender in emails sent by SendGrid.',
@@ -90,7 +91,8 @@ const config = convict({
                 doc: 'The secret key used to sign email tokens.',
                 format: String,
                 default: 'CHANGE_ME',
-                env: 'EMAIL_SIGN_SECRET'
+                env: 'EMAIL_SIGN_SECRET',
+                sensitive: true
             }
         },
         redis: {
