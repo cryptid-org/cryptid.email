@@ -39,6 +39,16 @@ const IbeSetupError = function IbeSetupError() {
     });
 };
 
+const InvalidEmailTokenException = function InvalidEmailTokenException(emailToken) {
+    return makeException({
+        type: 'InvalidEmailTokenException',
+        message: 'The supplied email token in invalid'.,
+        data: {
+            emailToken
+        }
+    });
+};
+
 const InvalidFormTokenException = function InvalidFormTokenException(formToken) {
     return makeException({
         type: 'InvalidFormTokenException',
@@ -73,6 +83,7 @@ module.exports = {
     EmailSendingException,
     IbeExtractError,
     IbeSetupError,
+    InvalidEmailTokenException,
     InvalidFormTokenException,
     InvalidVerificationToken,
     MissingParametersError

@@ -1,5 +1,7 @@
+const { Validation } = require('monet');
 const jwt = require('jsonwebtoken');
 
+const { InvalidEmailTokenException } = require('../exception');
 const config = require('../../config');
 
 const makeEmailSigner = function makeEmailSigner({ config, jwt }) {
@@ -19,7 +21,11 @@ const makeEmailSigner = function makeEmailSigner({ config, jwt }) {
                 algorithm: [config.get('emailVerification.sign.algorithm')]
             };
 
-            return jwt.verify(token, config.get('emailVerification.sign.secret'),options);
+            try {
+                return Validation.Success(jwt.verify(token, config.get('emailVerification.sign.secret'), options));
+            } catch(err) {
+                return Validation.Fail(InvalidEmailTokenException(token));
+            }
         }
     };
 };
