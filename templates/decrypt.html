@@ -5,10 +5,61 @@
   <meta charset="utf-8">
   
   <title>crpytid.email decrypt</title>
+
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <p>{{formToken}}</p>
+  <h1>crpytid email decrypt</h1>
+
+  <div>
+    <div>
+      <h2>1. Request a verification code for your email address</h2>
+      <div>
+        <label for="address-to-verify">Your email address:</label>
+        <input type="text"
+               id="address-to-verify" name="address-to-verify"/>
+        <input type="hidden"
+               id="form-token" value="{{formToken}}"/>
+      </div>
+      <div>
+        <input type="button"
+               id="request-code-button" value="Request code"/>
+      </div>
+    </div>
+
+    <div id="verification-code-form" class="hidden">
+      <h2>2. Enter the verification code you received</h2>
+      <div>
+          <label for="verification-code">Verification code:</label>
+          <input type="text"
+                 id="verification-code" name="verification-code"/>
+      </div>
+      <div>
+          <input type="button"
+                 id="verify-button" value="Verify"/>
+      </div>
+    </div>
+
+    <div id="file-selector-form" class="hidden">
+        <h2>3. Select the file to decrypt</h2>
+        <div>
+            <label for="file-to-decrypt">File to decrypt:</label>
+            <input type="file"
+                   id="file-to-decrypt" name="file-to-decrypt"/>
+        </div>
+        <div>
+            <input type="button"
+                   id="decrypt-button" value="Decrypt!"/>
+        </div>
+      </div>
+  </div>
+
+  <script type="module" src="/js/pages/decrypt.js"></script>
 </body>
 
 </html>
