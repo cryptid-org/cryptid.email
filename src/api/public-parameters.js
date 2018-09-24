@@ -4,7 +4,13 @@ const GET = {
     method: 'GET',
     path: '/public-parameters',
     handler(request, h) {
-        return IbeParametersService.getCurrentPublicParameters();
+        const { id } = request.query;
+
+        if (!id) {
+            return IbeParametersService.getCurrentPublicParameters();
+        } else {
+            return IbeParametersService.getParametersForId(id);
+        }        
     },
     options: {
         description: 'Returns the current public parameters.'
