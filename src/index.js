@@ -7,7 +7,7 @@ const Hapi = require('hapi');
 
 const server = new Hapi.server({
     port: config.get('server.port'),
-    host: config.get('server.host'),
+    //host: config.get('server.host'),
     routes: {
         files: {
             relativeTo: path.join(__dirname, '..', 'public')
