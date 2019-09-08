@@ -4,7 +4,7 @@ const convict = require('convict');
 const config = convict({
     env: {
         doc: 'The application environment.',
-        format: ['production', 'development', 'test', 'staging'],
+        format: ['production', 'development', 'local'],
         default: 'development',
         env: 'NODE_ENV'
     },
@@ -23,6 +23,12 @@ const config = convict({
         }
     },
     emailVerification: {
+        sendEmails: {
+            doc: 'Actually send emails or not.',
+            format: Boolean,
+            env: 'SEND_EMAILS',
+            default: true
+        },
         sendGrid: {
             apiKey: {
                 doc: 'The SendGrid API key.',
@@ -94,15 +100,7 @@ const config = convict({
                 env: 'EMAIL_SIGN_SECRET',
                 sensitive: true
             }
-        },
-        redis: {
-            url: {
-                doc: 'The url of the email verification Redis instance.',
-                format: String,
-                default: 'redis://localhost:6379',
-                env: 'REDIS_URL'
-            }
-        },
+        }
     },
     ibe: {
         parameterChangeInterval: {
@@ -113,7 +111,7 @@ const config = convict({
         securityLevel: {
             doc: 'The security level of the IBE system. Determines the strength of the system.',
             format: ['0', '1', '2', '3', '4'],
-            default: '2'
+            default: '0'
         },
         privateKeyGenerator: {
             identityConverter: {

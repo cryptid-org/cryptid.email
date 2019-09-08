@@ -4,19 +4,106 @@
 <head>
   <meta charset="utf-8">
   
-  <title>crpytid.email</title>
+  <title>CryptID.email</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" /> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css" />
+  <link rel="stylesheet" href="/css/cryptid.css" />
 </head>
 
 <body>
-  <h1>cryptid.email</h1>
-  <div>
-    <ul>
-      <li><a href="/encrypt">Encrypt</a></li>
-      <li><a href="/decrypt">Decrypt</a></li>
-    </ul>
-  </div>
+  <nav id="navigation" class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+          <a id="brand" class="navbar-item" href="/">
+            CryptID.email
+          </a>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <a href="/encrypt" class="navbar-item">Encrypt</a>
+          <a href="/decrypt" class="navbar-item">Decrypt</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <script type="module" src="/js/index.js"></script>
+  <main>
+    <section class="section is-hero">
+      <div class="container">
+        <div class="columns is-vcentered">
+          <div class="column is-5 is-offset-1">
+            <div class="section-header">
+              <h1 class="title is-spaced">
+                Identity-based File Encryption
+              </h1>
+              <h2 class="subtitle is-3">
+                Choose CryptID.email for secure communication – if it really matters, who's able to read what you've sent!
+              </h2>
+              <div class="field is-grouped">
+                <div class="control">
+                  <a href="/encrypt" class="button landing-button is-medium is-outlined">Encrypt</a>
+                </div>
+                <div class="control">
+                  <a href="/decrypt" class="button landing-button is-medium is-outlined">Decrypt</a>
+                </div>
+              </div>
+              <hr class="is-spacer is-1-5">
+              <div class="how-does-it-work">
+                Want to know how it works? Scroll down a bit!
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div id="landing-image">
+              <img src="/img/encrypt-file.svg" alt="Encrypt file." srcset="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section is-small how-it-works has-background">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-5">
+            <div class="card how-it-works-card">
+              <div class="img-holder">
+                  <img src="/img/password-code.svg">
+              </div>
+              <h3 class="title is-spaced is-3">
+                Encrypt!
+              </h3>
+              <p class="subtitle is-4">
+                Simply select the file that you want to encrypt and the recipient. CryptID.email will create a tailored file that may be only decrypted by your recipient.
+              </p>
+              <div class="control">
+                <a href="/encrypt" class="button landing-button is-medium is-outlined">Encrypt</a>
+              </div>
+            </div>
+          </div>
+          <div class="column is-2">
+          </div>
+          <div class="column is-5">
+              <div class="card how-it-works-card">
+                <div class="img-holder">
+                    <img src="/img/input-key.svg">
+                </div>
+                <h3 class="title is-spaced is-3">
+                  Read!
+                </h3>
+                <p class="subtitle is-4">
+                  If you've received a file that was encrypted with CryptID.email, decryption is really simple. Just verify your email address and you're good to go! 
+                </p>
+                <div class="control">
+                    <a href="/decrypt" class="button landing-button is-medium is-outlined">Decrypt</a>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>

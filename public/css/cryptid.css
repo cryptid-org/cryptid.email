@@ -1,0 +1,195 @@
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+#navigation {
+    background: #FFFFFF;
+    min-height: 7rem;
+}
+
+#brand {
+    font-weight: 700;
+    font-size: 3rem;
+    color: #000000;
+}
+
+#brand:hover {
+    color: #000000;
+}
+
+.navbar-item {
+    height: 3.5rem;   
+}
+
+.navbar-end {
+    align-items: center;
+}
+
+.navbar-brand {
+    align-items: center;
+}
+
+.navbar-item {
+    font-size:1.2rem;
+}
+
+.navbar-item:not(.is-active) {
+    margin-bottom: 2px;
+}
+
+a.navbar-item.is-active {
+    color: #000000;
+    font-weight: 700;
+    border-bottom: 2px #000000 solid;
+}
+
+a.navbar-item.is-active:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+a.navbar-item:not(.is-active):hover {
+    background: #FFFFFF;
+    color: #000000;
+    font-weight: 700;
+}
+
+.title {
+    font-size: 3rem;
+}
+
+#landing-image {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    align-items: center;
+}
+
+#landing-image > img {
+    height: auto;
+    max-width: 50%;
+    flex: 1;
+}
+
+.landing-button.is-outlined {
+    border: 2.3px #363636 solid;
+    color: #000000;
+    background: transparent;
+}
+
+.landing-button.is-outlined:hover {
+    background-color: #363636;
+    border: 2.3px #363636 solid;
+    color: #FFFFFF;
+}
+
+.how-does-it-work {
+    color: #363636;
+    font-weight: 300;
+    font-size: 1.25rem;
+}
+
+.how-it-works {
+    background: #EDEDED;
+}
+
+.how-it-works-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.how-it-works-card .img-holder {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.how-it-works-card img {
+    height: auto;
+    max-width: 25%;
+    flex: 1;
+}
+
+.how-it-works-card h3 {
+    padding-top: 2rem;
+}
+
+.file-label {
+    width: 100%;
+    text-align: center;
+}
+
+.file-name {
+    min-width: 100%;
+    text-align: center;
+}
+
+hr.no-line {
+    border: none;
+    background: transparent;
+}
+
+#recipient-address:active, #recipient-address:focus {
+    border-color: #EDEDED;
+    box-shadow: 0 0 0 0.125em rgba(20, 20, 20, 0.25);
+}
+
+#encrypt-overlay, #decrypt-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.25);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#encrypt-overlay .fa-5x, #decrypt-overlay .fa-5x {
+    color: #363636;
+}
+
+#encryption-progress, #encryption-done, #decryption-progress, #decryption-done {
+    flex-direction: column;
+    align-items: center;    
+}
+
+#encrypt-wrapper, #decrypt-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+html, body {
+    height: 100%;
+}
+
+.body-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.encrypt-main, .decrypt-main {
+    flex: 1 1 auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+#decrypt-error {
+    padding-bottom: 1.25rem;
+}

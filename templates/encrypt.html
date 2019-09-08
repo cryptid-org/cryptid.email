@@ -4,13 +4,114 @@
 <head>
   <meta charset="utf-8">
   
-  <title>crpytid.email encrypt</title>
+  <title>CryptID.email – Encrypt</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" /> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css" />
+  <link rel="stylesheet" href="/css/cryptid.css" />
+
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
-  <h1>crpytid.email encrypt</h1>
+  <div class="body-wrapper">
+    <nav id="navigation" class="navbar" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+            <a id="brand" class="navbar-item" href="/">
+              CryptID.email
+            </a>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <a href="/encrypt" class="navbar-item is-active">Encrypt</a>
+            <a href="/decrypt" class="navbar-item">Decrypt</a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-  <div>
+    <main class="encrypt-main">
+      <section id="encrypt-wrapper" class="section is-hero">
+        <div id="encrypt-overlay" class="hidden">
+          <div id="encryption-progress" class="hidden">
+            <div class="fa-5x">
+              <i class="fas fa-cog fa-spin"></i>
+            </div>
+            <h3 class="title is-3">Encryption in progress...</h3>
+          </div>
+
+          <div id="encryption-done" class="hidden">
+            <div class="fa-5x">
+              <i class="fas fa-cog fa-check"></i>
+            </div>
+            <div class="field">
+              <div class="control">
+                <span id="save-button" class="button landing-button is-medium is-outlined">Click here to save the encrypted file!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="encrypt-container" class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-6">
+              <div class="section-header">
+                <h1 class="title is-spaced">
+                  Encrypt
+                </h1>
+
+                <h2 class="subtitle is-4">
+                  Please enter the recipient and select the file that you want to encrypt. Afterwards, please click Next.
+                </h2>
+
+                <hr class="is-spacer is-1-5">
+
+                <div class="field">
+                  <label for="recipient-address" class="label is-medium">Email</label>
+                  <div class="control">
+                    <input id="recipient-address" name="recipient-address" class="input is-medium" type="email" placeholder="alice@example.com">
+                  </div>
+                </div>
+
+                <div class="file has-name is-boxed">
+                  <label for="file-to-encrypt" class="file-label">
+                    <input id="file-to-encrypt" class="file-input" type="file" name="file-to-encrypt">
+                    <span class="file-cta">
+                      <span class="file-icon fa-3x">
+                        <i class="fas fa-file-alt"></i>
+                      </span>
+                      <span class="file-label">
+                        Drag here a file, or click to browse files...
+                      </span>
+                    </span>
+                    <span id="file-name" class="file-name">
+                      Waiting for a file.
+                    </span>
+                  </label>
+                </div>
+
+                <hr class="no-line is-spacer is-1-5">
+
+                <div class="field">
+                  <div class="control">
+                    <span id="encrypt-button" class="button landing-button is-medium is-outlined">Encrypt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div id="landing-image">
+                <img src="/img/password-code.svg" alt="Encrypt file." srcset="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <!-- <div>
     <label for="file-to-encrypt">File to encrypt:</label>
     <input type="file"
            id="file-to-encrypt" name="file-to-encrypt"/>
@@ -25,8 +126,9 @@
   <div>
     <input type="button"
            id="encrypt-button" value="Encrypt!"/>
-  </div>
+  </div>-->
 
+  <script type="module" src="/js/cryptid/index.js"></script>
   <script type="module" src="/js/pages/encrypt.js"></script>
 </body>
 

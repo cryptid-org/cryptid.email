@@ -1,6 +1,6 @@
 const uuid = require('uuid/v1');
 
-const MetaClient = require('../../ext/metaclient.cjs');
+const CryptID = require('@cryptid/cryptid-js')
 
 const config = require('../../config');
 
@@ -11,7 +11,7 @@ const { IbeParametersRepository } = require('./repository');
 const INSTANTLY = 0;
 const DONE = true;
 
-const makeIbeParametersService = function makeIbeParametersService({ config, IbeParametersRepository, MetaClient, uuid }) {
+const makeIbeParametersService = function makeIbeParametersService({ config, IbeParametersRepository, CryptID, uuid }) {
     const parameterFactory = function parameterFactory(masterSecret, publicParameters) {
         return {
             id: uuid(),
@@ -26,7 +26,7 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
             setTimeout(async function rotate() {
                 logger.info('Creating new IBE parameters.');
 
-                const instance = await MetaClient.getInstance();
+                const instance = await CryptID.getInstance();
                 const { success, masterSecret, publicParameters } = instance.setup(config.get('ibe.securityLevel'));
 
                 if (!success) {
@@ -95,5 +95,5 @@ const makeIbeParametersService = function makeIbeParametersService({ config, Ibe
 
 module.exports = {
     makeIbeParametersService,
-    IbeParametersService: makeIbeParametersService({ config, IbeParametersRepository, MetaClient, uuid })
+    IbeParametersService: makeIbeParametersService({ config, IbeParametersRepository, CryptID, uuid })
 };

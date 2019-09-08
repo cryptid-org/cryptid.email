@@ -3,7 +3,7 @@ const path = require('path');
 const config = require('../config');
 const logger =  require('./logger');
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 
 const server = new Hapi.server({
     port: config.get('server.port'),
@@ -44,9 +44,10 @@ const server = new Hapi.server({
 
 async function logging(server) {
     const options = {
-        prettyPrint: config.get('env') !== 'production',
-        level: config.get('env') == 'development' ? 'debug' : 'info',
-        instance: require('./logger')
+        prettyPrint: config.get('env') == 'local',
+        level: 'info',
+        instance: require('./logger'),
+        logEvents: false
     };
 
     await server.register({
@@ -56,7 +57,7 @@ async function logging(server) {
 }
 
 async function templating(server) {
-    await server.register([require('vision'), require('inert')]);
+    await server.register([require('@hapi/vision'), require('@hapi/inert')]);
 
     server.views({
         engines: {

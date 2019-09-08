@@ -5,6 +5,48 @@ import KeyEncryption from '/js/components/KeyEncryption.js';
 import SymmetricCrypto from '/js/components/SymmetricCrypto.js';
 import { saveAs } from '/js/third-party/FileSaver.js';
 
+const fileNameLabel = document.getElementById('file-name');
+
+const decryptContainer = document.getElementById('decrypt-container');
+const decryptOverlay = document.getElementById('decrypt-overlay');
+const decryptionProgress = document.getElementById('decryption-progress');
+const decryptionDone = document.getElementById('decryption-done');
+
+const decryptEmailPanel = document.getElementById('decrypt-email-panel');
+const decryptTokenPanel = document.getElementById('decrypt-token-panel');
+const decryptFilePanel = document.getElementById('decrypt-file-panel');
+
+const toTokenPanelButton = document.getElementById('to-token-panel-button');
+const toDecryptFilePanelButton = document.getElementById('to-decrypt-file-panel-button');
+
+const tokenError = document.getElementById('token-error');
+const decryptError = document.getElementById('decrypt-error');
+
+const formTokenInput = document.getElementById('form-token');
+
+const fileToDecryptInput = document.getElementById('file-to-decrypt');
+
+const data = {};
+
+const saveButton = document.getElementById('save-button');
+
+saveButton.addEventListener('click', function onSaveButtonClick() {
+    saveAs(data.fileBlob, data.filename);
+});
+
+fileToDecryptInput.addEventListener('change', function onFileToDecryptInputChange() {
+    const [ file ] = fileToDecryptInput.files;
+
+    fileNameLabel.textContent = file.name;
+
+    decryptError.classList.add('hidden');
+});
+
+formTokenInput.addEventListener('click', function onFormTokenInputClick() {
+    tokenError.classList.add('is-invisible');
+    formTokenInput.classList.remove('is-danger');
+});
+
 const View = (function IIFE() {
     let requestCodeHandler = null;
     let requestVerificationHandler = null;
@@ -18,36 +60,38 @@ const View = (function IIFE() {
             return document.getElementById('address-to-verify').value;
         },
         set onCodeRequested(handler) {
-            const requestCodeButton = document.getElementById('request-code-button');
+            const toTokenPanelButton = document.getElementById('to-token-panel-button');
 
             if (requestCodeHandler) {
-                requestCodeButton.removeEventListener('click', requestCodeHandler);
+                toTokenPanelButton.removeEventListener('click', requestCodeHandler);
             }
 
             requestCodeHandler = handler;
 
-            requestCodeButton.addEventListener('click', requestCodeHandler);
+            toTokenPanelButton.addEventListener('click', requestCodeHandler);
         },
         showVerificationCodeForm() {
-            document.getElementById('verification-code-form').classList.remove('hidden');
+            decryptEmailPanel.classList.add('hidden');
+            decryptTokenPanel.classList.remove('hidden');
         },
 
         get verificationCode() {
             return document.getElementById('verification-code').value;
         },
         set onVerificationRequested(handler) {
-            const requestVerificationButton = document.getElementById('verify-button');
+            const toDecryptFilePanelButton = document.getElementById('to-decrypt-file-panel-button');
 
             if (requestVerificationHandler) {
-                requestVerificationButton.removeEventListener('click', requestVerificationHandler);
+                toDecryptFilePanelButton.removeEventListener('click', requestVerificationHandler);
             }
 
             requestVerificationHandler = handler;
 
-            requestVerificationButton.addEventListener('click', requestVerificationHandler);
+            toDecryptFilePanelButton.addEventListener('click', requestVerificationHandler);
         },
         showFileSelectorForm() {
-            document.getElementById('file-selector-form').classList.remove('hidden');
+            decryptTokenPanel.classList.add('hidden');
+            decryptFilePanel.classList.remove('hidden');
         },
 
         get fileToDecrypt() {
@@ -74,10 +118,10 @@ const Store = Object.create(null);
 const api = Object.create(CryptidApi);
 api.CryptidApi();
 
-View.onCodeRequested = async function onRequestCodeClick() {
+View.onCodeRequested = function onRequestCodeClick() {
     const email = View.emailAddressToVerify;
 
-    await api.initiateEmailVerification(email, View.formToken);
+    api.initiateEmailVerification(email, View.formToken);
 
     View.showVerificationCodeForm();
 };
@@ -86,23 +130,56 @@ View.onVerificationRequested = async function onRequestVerificationClick() {
     const verificatonToken = View.verificationCode;
     const formToken = View.formToken;
 
-    Store.emailToken = await api.getEmailToken(formToken, verificatonToken);
-    
-    View.showFileSelectorForm();
+    const emailToken = await api.getEmailToken(formToken, verificatonToken);
+
+    if (!emailToken) {
+        tokenError.classList.remove('is-invisible');
+        formTokenInput.classList.add('is-danger');
+    } else {
+        Store.emailToken = emailToken;
+        View.showFileSelectorForm();
+    }
 }
 
 View.onDecryptionRequested = async function onRequestDecryptionClick() {
-    const fileArray = await readFile(View.fileToDecrypt);
+    decryptContainer.style.filter = 'blur(5px)';
+    decryptOverlay.classList.remove('hidden');
+    decryptOverlay.classList.add('flex');
+    decryptionProgress.classList.remove('hidden');
+    decryptionProgress.classList.add('flex');
 
-    const contents = await parseContents(fileArray);
+    try {
+        const fileArray = await readFile(View.fileToDecrypt);
 
-    const rawSymmetricKey = await obtainRawSymmetricKey(contents);
+        const contents = await parseContents(fileArray);
 
-    const decryptedContents = await decryptData(rawSymmetricKey, contents);
+        const rawSymmetricKey = await obtainRawSymmetricKey(contents);
 
-    const fileBlob = new Blob([decryptedContents], { type: "application/octet-stream" });
+        if (!rawSymmetricKey) {
+            throw new Error('Unable to decrypt symmetric key!');
+        }
 
-    saveAs(fileBlob, contents.filenameString);
+        const decryptedContents = await decryptData(rawSymmetricKey, contents);
+
+        data.fileBlob = new Blob([decryptedContents], { type: "application/octet-stream" });
+        data.filename = contents.filenameString;
+
+        decryptionProgress.classList.remove('flex');
+        decryptionProgress.classList.add('hidden');
+
+        decryptionDone.classList.remove('hidden');
+        decryptionDone.classList.add('flex');
+    } catch (err) {
+        console.log(err);
+
+        decryptContainer.style.filter = '';
+        decryptOverlay.classList.add('hidden');
+        decryptOverlay.classList.remove('flex');
+        decryptionProgress.classList.add('hidden');
+        decryptionProgress.classList.remove('flex');
+
+        decryptError.classList.remove('hidden');
+    }
 };
 
 function readFile(file) {
@@ -130,6 +207,10 @@ function parseContents(fileArray) {
 async function obtainRawSymmetricKey({ parametersIdString, keyCiphertextString }) {
     const privateKey = await api.getPrivateKey(Store.emailToken, parametersIdString);
     console.log(privateKey);
+
+    if (!privateKey) {
+        return null;
+    }
 
     const ke = Object.create(KeyEncryption);
     ke.KeyEncryption();

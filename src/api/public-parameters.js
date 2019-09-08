@@ -1,4 +1,4 @@
-const Boom = require('boom');
+const Boom = require('@hapi/boom');
 const { Maybe } = require('monet');
 
 const { IbeParametersService } = require('../ibe-parameters/IbeParametersService');

@@ -1,13 +1,12 @@
 const { Validation } = require('monet');
 
-const MetaClient = require('../../ext/metaclient.cjs');
+const CryptID = require('@cryptid/cryptid-js');
 
 const logger = require('../logger');
 const { IbeExtractError, MissingParametersError } = require('../exception');
 const { IbeParametersService } = require('../ibe-parameters/IbeParametersService');
-const { IdentityConverter } = require('./identity-converter');
 
-const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParametersService, IdentityConverter, MetaClient }) {
+const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParametersService, CryptID }) {
     return {
         async generate(parametersId, identity) {
             const parameters = await IbeParametersService.getParametersForId(parametersId);
@@ -18,9 +17,9 @@ const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParameters
                 return Validation.Fail(MissingParametersError(parametersId));
             }
 
-            const client = await MetaClient.getInstance();
+            const client = await CryptID.getInstance();
 
-            const convertedIdentity = IdentityConverter.convert(identity);
+            const convertedIdentity = identity; // IdentityConverter.convert(identity);
 
             const { success, privateKey } = client.extract(parameters.just().publicParameters, parameters.just().masterSecret, convertedIdentity);
 
@@ -35,5 +34,5 @@ const makePrivateKeyGenerator = function makePrivateKeyGenerator({ IbeParameters
 
 module.exports = {
     makePrivateKeyGenerator,
-    PrivateKeyGenerator: makePrivateKeyGenerator({ IbeParametersService, IdentityConverter, MetaClient })
+    PrivateKeyGenerator: makePrivateKeyGenerator({ IbeParametersService, CryptID })
 };

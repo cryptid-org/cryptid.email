@@ -1,9 +1,6 @@
 {
-    server: {
-        port: 8080,
-        host: 'localhost'
-    },
     emailVerification: {
+        sendEmails: true,
         sendGrid: {
             senderAddress: 'verify@cryptid.email'
         },
@@ -28,7 +25,7 @@
     ibe: {
         // one hour (in ms)
         parameterChangeInterval: 3600000,
-        securityLevel: '2',
+        securityLevel: '0',
         privateKeyGenerator: {
             identityConverter: 'StringifyConverter'
         }

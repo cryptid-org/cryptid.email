@@ -1,17 +1,12 @@
-import MetaClient from '/js/metaclient/metaclient.esm.js';
-import StringifyConverter from '/js/components/StringifyConverter.js';
-
 const IdentityBasedEncryption = (function IIFE() {
-    const clientPromise = MetaClient.getInstance();
-    const publicKeyConverter = Object.create(StringifyConverter);
-    publicKeyConverter.StringifyConverter();
+    const clientPromise = CryptID.default.getInstance();
 
     return {
         IdentityBasedEncryption() {
             // Do nothing.
         },
         async encrypt(publicParameters, publicKey, data) {
-            const identity = publicKeyConverter.convert(publicKey);
+            const identity = publicKey;
 
             const instance = await clientPromise;
 

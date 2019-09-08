@@ -8,10 +8,32 @@ import { saveAs } from '/js/third-party/FileSaver.js';
 const fileInput = document.getElementById('file-to-encrypt');
 const emailInput = document.getElementById('recipient-address');
 const encryptButton = document.getElementById('encrypt-button');
+const saveButton = document.getElementById('save-button');
+
+const fileNameLabel = document.getElementById('file-name');
+
+const encryptContainer = document.getElementById('encrypt-container');
+const encryptOverlay = document.getElementById('encrypt-overlay');
+const encryptionProgress = document.getElementById('encryption-progress');
+const encryptionDone = document.getElementById('encryption-done');
+
+const data = {};
+
+saveButton.addEventListener('click', function onSaveClick() {
+    saveAs(data.cryptidBlob, `${data.filename}.cryptid`);
+});
 
 encryptButton.addEventListener('click', async function onEncryptClick() {
     const [ file ] = fileInput.files;
     const email = emailInput.value;
+
+    data.filename = file.name;
+
+    encryptContainer.style.filter = 'blur(5px)';
+    encryptOverlay.classList.remove('hidden');
+    encryptOverlay.classList.add('flex');
+    encryptionProgress.classList.remove('hidden');
+    encryptionProgress.classList.add('flex');
 
     const contents = await readFile(file);
 
@@ -19,10 +41,20 @@ encryptButton.addEventListener('click', async function onEncryptClick() {
 
     const { keyCiphertext, parametersId } = await encryptContentEncryptionKey(contentEncryptionResult.rawContentEncryptionKey, email);
 
-    const cryptidBlob = await embedIntoCryptidFile(file.name, parametersId, contentEncryptionResult.iv,
+    data.cryptidBlob = await embedIntoCryptidFile(file.name, parametersId, contentEncryptionResult.iv,
                                                    keyCiphertext, contentEncryptionResult.ciphertext);
 
-    saveAs(cryptidBlob, `${file.name}.cryptid`);
+    encryptionProgress.classList.remove('flex');
+    encryptionProgress.classList.add('hidden');
+
+    encryptionDone.classList.remove('hidden');
+    encryptionDone.classList.add('flex');
+});
+
+fileInput.addEventListener('change', function onFileSelected() {
+    const [ file ] = fileInput.files;
+
+    fileNameLabel.textContent = file.name;
 });
 
 function readFile(file) {

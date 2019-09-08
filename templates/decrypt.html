@@ -4,16 +4,194 @@
 <head>
   <meta charset="utf-8">
   
-  <title>crpytid.email decrypt</title>
+  <title>CryptID.email – Decrypt</title>
 
-  <style>
-    .hidden {
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" /> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css" />
+  <link rel="stylesheet" href="/css/cryptid.css" />
+
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
+  <div class="body-wrapper">
+    <nav id="navigation" class="navbar" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+            <a id="brand" class="navbar-item" href="/">
+              CryptID.email
+            </a>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <a href="/encrypt" class="navbar-item">Encrypt</a>
+            <a href="/decrypt" class="navbar-item is-active">Decrypt</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="decrypt-main">
+      <section id="decrypt-wrapper" class="section is-hero">
+        <div id="decrypt-overlay" class="hidden">
+          <div id="decryption-progress" class="hidden">
+            <div class="fa-5x">
+              <i class="fas fa-cog fa-spin"></i>
+            </div>
+            <h3 class="title is-3">Decryption in progress...</h3>
+          </div>
+
+          <div id="decryption-done" class="hidden">
+            <div class="fa-5x">
+              <i class="fas fa-cog fa-check"></i>
+            </div>
+            <div class="field">
+              <div class="control">
+                <span id="save-button" class="button landing-button is-medium is-outlined">Click here to save the file!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="decrypt-container" class="container">
+          <div class="columns is-vcentered">
+            <div class="column is-6">
+              <div class="section-header">
+                <h1 class="title is-spaced">
+                  Decrypt
+                </h1>
+
+                <h2 class="subtitle is-4">
+                  Please follow the steps below to decrypt files.
+                </h2>
+
+                <hr class="is-spacer is-1-5">
+
+                <div id="decrypt-email-panel" class="">
+                  <div class="columns">
+                    <div class="column is-1">
+                      <h3 class="title is-2">
+                        1.
+                      </h3>
+                    </div>
+                    <div class="column is-11">
+                      <p class="subtitle is-5">
+                        First, you have to verify your email address. Please enter your email address in the field below and then click Next.
+                      </p>
+                      <div class="field">
+                        <label for="address-to-ve-rify" class="label is-medium">Email</label>
+                        <div class="control">
+                          <input id="address-to-verify" name="address-to-verify" class="input is-medium" type="email" placeholder="bob@example.com">
+                        </div>
+                      </div>
+
+                      <input type="hidden" id="form-token" value="{{formToken}}"/>
+
+                      <hr class="no-line is-spacer is-1-5">
+
+                      <div class="field">
+                        <div class="control">
+                          <span id="to-token-panel-button" class="button landing-button is-medium is-outlined">Next</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="decrypt-token-panel" class="hidden">
+                  <div class="columns">
+                    <div class="column is-1">
+                      <h3 class="title is-2">
+                        2.
+                      </h3>
+                    </div>
+                    <div class="column is-11">
+                      <p class="subtitle is-5">
+                        We've sent a verification code to the entered email address. Please enter this code in the field below and then click Next.
+                      </p>
+
+                      <div class="field">
+                        <label for="verification-code" class="label is-medium">Code</label>
+                        <div class="control">
+                          <input id="verification-code" name="verification-code" class="input is-medium" placeholder="AbCd1234">
+                        </div>
+                        <p id="token-error" class="help is-danger is-invisible">The code is invalid!</p>
+                      </div>
+
+                      <input type="hidden" id="form-token" value="{{formToken}}"/>
+
+                      <hr class="no-line is-spacer is-1-5">
+
+                      <div class="field">
+                        <div class="control">
+                          <span id="to-decrypt-file-panel-button" class="button landing-button is-medium is-outlined">Next</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="decrypt-file-panel" class="hidden">
+                  <div class="columns">
+                    <div class="column is-1">
+                      <h3 class="title is-2">
+                        3.
+                      </h3>
+                    </div>
+                    <div class="column is-11">
+                      <p class="subtitle is-5">
+                        Last step ahead! Simply, select the file that you want to decrypt. If you're the actual recipient, you will be able to decrypt it.
+                      </p>
+
+                      <div id="decrypt-error" class="hidden">
+                        <article class="message is-danger">
+                          <div class="message-body">
+                            We were unable to decrypt the file. Are you sure, that you were the recipient?
+                          </div>
+                        </article>
+                      </div>
+
+                      <div class="file has-name is-boxed">
+                        <label for="file-to-decrypt" class="file-label">
+                          <input id="file-to-decrypt" class="file-input" type="file" name="file-to-decrypt">
+                          <span class="file-cta">
+                            <span class="file-icon fa-3x">
+                              <i class="fas fa-file-alt"></i>
+                            </span>
+                            <span class="file-label">
+                              Drag here a file, or click to browse files...
+                            </span>
+                          </span>
+                          <span id="file-name" class="file-name">
+                            Waiting for a file.
+                          </span>
+                        </label>
+                      </div>
+
+                      <hr class="no-line is-spacer is-1-5">
+
+                      <div class="field">
+                        <div class="control">
+                          <span id="decrypt-button" class="button landing-button is-medium is-outlined">Decrypt</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>                  
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div id="landing-image">
+                <img src="/img/input-key.svg" alt="Encrypt file." srcset="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <!--
   <h1>crpytid email decrypt</h1>
 
   <div>
@@ -58,7 +236,9 @@
         </div>
       </div>
   </div>
+  -->
 
+  <script type="module" src="/js/cryptid/index.js"></script>
   <script type="module" src="/js/pages/decrypt.js"></script>
 </body>
 

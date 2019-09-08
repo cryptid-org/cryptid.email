@@ -63,8 +63,8 @@ typings/
 # Ignoring external dependencies for now
 ext
 
-# Ignoring MeaClient sources for now
-public/js/metaclient/*.js
-
 # Do not include .env files
 *.env
+
+# GCP manifest
+app.yaml

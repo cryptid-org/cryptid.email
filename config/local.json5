@@ -1,0 +1,34 @@
+{
+    server: {
+        port: 8080,
+        host: 'localhost'
+    },
+    emailVerification: {
+        sendEmails: false,
+        formToken: {
+            length: 128,
+            charset: 'alphanumeric',
+            placeholder: 'Hello darkness, my old friend',
+            // one hour (in sec)
+            placeholderExpiration: 3600
+        },
+        verificationToken: {
+            length: 8,
+            charset: 'alphanumeric',
+            // ten minutes (in sec)
+            expiration: 600
+        },
+        sign: {
+            algorithm: 'HS256',
+            expiration: '1h'
+        }
+    },
+    ibe: {
+        // one hour (in ms)
+        parameterChangeInterval: 3600000,
+        securityLevel: '0',
+        privateKeyGenerator: {
+            identityConverter: 'StringifyConverter'
+        }
+    }
+}
