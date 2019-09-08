@@ -10,7 +10,7 @@ const makeEmailSender = function makeEmailSender({ config, sendGridMail }) {
 
     let sender;
     if (config.get('emailVerification.sendEmails')) {
-        sender = sendGridSender.bind(sendGridMail);
+        sender = sendGridSender.bind(null, sendGridMail);
     } else {
         sender = nullSender;
     }
@@ -39,7 +39,7 @@ function sendGridSender(sendGridMail, message) {
 
         return Validation.Success();
     } catch (err) {
-        logger.warn('Failed to send verification token.', { recipient }, err);
+        logger.warn('Failed to send verification token.', { to: message.to }, err);
 
         return Validation.Fail(EmailSendingError(recipient));
     }
