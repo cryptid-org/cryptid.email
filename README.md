@@ -22,7 +22,9 @@ npm i
 
 ### 2. Setting up the server
 
-The second step is just as easy as the first one:
+Before starting up the server, you should set the `NODE_ENV` environment variable to `local`.
+
+Spinning a local instance is now as easy as executing the following command:
 
 ~~~~
 npm start
